@@ -1,0 +1,136 @@
+<!-- Loading State -->
+<div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Đang tải trang chủ...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-state" *ngIf="error && !isLoading">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Lỗi</h3>
+    <p>{{ error }}</p>
+    <button (click)="loadProducts()" class="btn btn-primary">
+        Thử lại
+    </button>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading && !error">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">LeCas - Thời Trang Nam Casual</h1>
+                <p class="hero-subtitle">Khám phá bộ sưu tập thời trang nam hiện đại, phong cách và chất lượng cao</p>
+                <div class="hero-actions">
+                    <a routerLink="/products" class="btn btn-primary">Khám phá ngay</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Danh Mục Sản Phẩm</h2>
+            <div class="categories-grid">
+                <div class="category-card" *ngFor="let category of featuredCategories">
+                    <a [routerLink]="category.link" class="category-link">
+                        <div class="category-image">
+                            <img [src]="category.image" [alt]="category.name" class="category-img">
+                        </div>
+                        <h3 class="category-name">{{ category.name }}</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Giao hàng nhanh</h3>
+                    <p>Giao hàng miễn phí cho đơn hàng trên 500k</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3>Đổi trả dễ dàng</h3>
+                    <p>30 ngày đổi trả miễn phí</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Bảo hành chất lượng</h3>
+                    <p>Cam kết chất lượng sản phẩm</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Đề xuất</h2>
+                <a [routerLink]="['/products']" class="view-all-link">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="products-grid">
+                <app-product-card *ngFor="let product of featuredProducts" [product]="product"></app-product-card>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="new-arrivals">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Hàng Mới Về</h2>
+                <a [routerLink]="['/products']" class="view-all-link">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="products-grid">
+                <app-product-card *ngFor="let product of newArrivals" [product]="product"></app-product-card>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="best-sellers">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Bán Chạy Nhất</h2>
+                <a [routerLink]="['/products']" class="view-all-link">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="products-grid">
+                <app-product-card *ngFor="let product of bestSellers" [product]="product"></app-product-card>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Đăng Ký Nhận Tin</h2>
+                <p>Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Nhập email của bạn" class="newsletter-input">
+                    <button class="btn btn-primary">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

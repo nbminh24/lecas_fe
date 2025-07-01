@@ -1,0 +1,176 @@
+<div class="product-detail-page">
+    <div class="container">
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+            <p>Đang tải thông tin sản phẩm...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" *ngIf="error && !isLoading">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Lỗi</h3>
+            <p>{{ error }}</p>
+            <button [routerLink]="['/products']" class="btn btn-primary">
+                Quay lại danh sách sản phẩm
+            </button>
+        </div>
+
+        <!-- Product Detail Content -->
+        <div class="product-detail-content" *ngIf="product && !isLoading">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a [routerLink]="['/']">Trang chủ</a>
+                <span>/</span>
+                <a [routerLink]="['/products']">Sản phẩm</a>
+                <span>/</span>
+                <span>{{ product.name }}</span>
+            </nav>
+
+            <div class="product-layout">
+                <!-- Product Gallery -->
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img [src]="product.images[selectedImageIndex]" [alt]="product.name" class="gallery-main-image">
+
+                        <!-- Discount Badge -->
+                        <div class="discount-badge" *ngIf="getDiscountPercentage() > 0">
+                            -{{ getDiscountPercentage() }}%
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail Images -->
+                    <div class="thumbnail-images" *ngIf="product.images.length > 1">
+                        <button *ngFor="let image of product.images; let i = index" (click)="selectImage(i)"
+                            class="thumbnail-btn" [class.active]="selectedImageIndex === i">
+                            <img [src]="image" [alt]="product.name + ' ' + (i + 1)">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info">
+                    <div class="product-header">
+                        <h1 class="product-title">{{ product.name }}</h1>
+                        <div class="product-category">
+                            {{ getCategoryDisplayName(product.category) }} / {{ product.subCategory }}
+                        </div>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star"
+                                [class.filled]="star <= product.rating"
+                                [class.half]="star === Math.ceil(product.rating) && product.rating % 1 !== 0"></i>
+                        </div>
+                        <span class="rating-text">
+                            {{ product.rating }}/5 ({{ product.reviewCount }} đánh giá)
+                        </span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="product-price">
+                        <span class="current-price">{{ formatPrice(product.price) }}</span>
+                        <span class="original-price" *ngIf="product.originalPrice">
+                            {{ formatPrice(product.originalPrice) }}
+                        </span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="product-description">
+                        <h3>Mô tả sản phẩm</h3>
+                        <p>{{ product.description }}</p>
+                    </div>
+
+                    <!-- Size Selection -->
+                    <div class="product-options" *ngIf="product.sizes.length > 0">
+                        <h3>Kích thước</h3>
+                        <div class="size-options">
+                            <button *ngFor="let size of ['S', 'M', 'L', 'XL', '28', '30', '32', '34', '36']"
+                                (click)="selectSize(size)" class="size-option" [class.selected]="selectedSize === size"
+                                [class.available]="isSizeAvailable(size)" [disabled]="!isSizeAvailable(size)">
+                                {{ size }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Color Selection -->
+                    <div class="product-options" *ngIf="product.colors.length > 0">
+                        <h3>Màu sắc</h3>
+                        <div class="color-options">
+                            <button *ngFor="let color of product.colors" (click)="selectColor(color.name)"
+                                class="color-option" [class.selected]="selectedColor === color.name"
+                                [style.background-color]="color.code" [title]="color.name"></button>
+                        </div>
+                        <span class="selected-color-name" *ngIf="selectedColor">
+                            {{ selectedColor }}
+                        </span>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="product-options">
+                        <h3>Số lượng</h3>
+                        <div class="quantity-controls">
+                            <button (click)="decreaseQuantity()" class="qty-btn">-</button>
+                            <span class="qty-display">{{ quantity }}</span>
+                            <button (click)="increaseQuantity()" class="qty-btn">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button (click)="addToCart()" class="btn btn-primary add-to-cart-btn"
+                            [disabled]="!selectedSize || !selectedColor">
+                            <i class="fas fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </button>
+
+                        <button (click)="buyNow()" class="btn btn-accent buy-now-btn"
+                            [disabled]="!selectedSize || !selectedColor">
+                            <i class="fas fa-bolt"></i>
+                            Mua ngay
+                        </button>
+                    </div>
+
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <div class="feature">
+                            <i class="fas fa-shipping-fast"></i>
+                            <span>Miễn phí vận chuyển cho đơn hàng từ 500k</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-undo"></i>
+                            <span>Đổi trả miễn phí trong 30 ngày</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Bảo hành chính hãng</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details Tabs -->
+            <div class="product-tabs">
+                <div class="tab-navigation">
+                    <button class="tab-btn active">Chi tiết sản phẩm</button>
+                    <button class="tab-btn">Đánh giá ({{ product.reviewCount }})</button>
+                    <button class="tab-btn">Hướng dẫn mua hàng</button>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-panel active">
+                        <h3>Thông tin chi tiết</h3>
+                        <ul class="product-details">
+                            <li><strong>Danh mục:</strong> {{ getCategoryDisplayName(product.category) }}</li>
+                            <li><strong>Chất liệu:</strong> Cotton 100%</li>
+                            <li><strong>Xuất xứ:</strong> Việt Nam</li>
+                            <li><strong>Bảo hành:</strong> 1 năm</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

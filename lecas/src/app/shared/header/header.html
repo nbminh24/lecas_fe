@@ -1,0 +1,42 @@
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <a routerLink="/" class="logo-link">
+                    <h1>LeCas</h1>
+                    <span class="logo-subtitle">Men's Fashion</span>
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a routerLink="/" class="nav-link">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/products" class="nav-link">Sản phẩm</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Actions -->
+            <div class="user-actions">
+                <a routerLink="/login" class="action-link">
+                    <i class="fas fa-user"></i>
+                    <span>Đăng nhập</span>
+                </a>
+                <a routerLink="/cart" class="action-link cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Giỏ hàng</span>
+                    <ng-container *ngIf="cartItemCount$ | async as count">
+                        <span class="cart-badge" *ngIf="count > 0">
+                            {{ count }}
+                        </span>
+                    </ng-container>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

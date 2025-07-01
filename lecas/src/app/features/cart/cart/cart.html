@@ -1,0 +1,134 @@
+<div class="cart-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Giỏ Hàng</h1>
+            <p class="page-subtitle">Kiểm tra và chỉnh sửa sản phẩm trong giỏ hàng</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+            <p>Đang tải giỏ hàng...</p>
+        </div>
+
+        <!-- Empty Cart State -->
+        <div class="empty-cart" *ngIf="!isLoading && isCartEmpty()">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Giỏ hàng trống</h3>
+            <p>Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+            <a [routerLink]="['/products']" class="btn btn-primary">
+                <i class="fas fa-shopping-bag"></i>
+                Tiếp tục mua sắm
+            </a>
+        </div>
+
+        <!-- Cart Content -->
+        <div class="cart-content" *ngIf="!isLoading && !isCartEmpty()">
+            <!-- Cart Items -->
+            <div class="cart-items">
+                <div class="cart-header">
+                    <h2>Sản phẩm ({{ getItemCount() }})</h2>
+                </div>
+
+                <div class="cart-item" *ngFor="let item of cartItems">
+                    <!-- Product Image -->
+                    <div class="item-image">
+                        <img [src]="item.product.images[0]" [alt]="item.product.name">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="item-details">
+                        <h3 class="item-name">{{ item.product.name }}</h3>
+                        <div class="item-category">{{ item.product.subCategory }}</div>
+                        <div class="item-options">
+                            <span class="option"><strong>Kích thước:</strong> {{ item.selectedSize }}</span>
+                            <span class="option"><strong>Màu:</strong> {{ item.selectedColor }}</span>
+                        </div>
+                        <div class="item-price">
+                            {{ formatPrice(item.price) }}
+                            <span class="original-price" *ngIf="item.product.originalPrice">
+                                {{ formatPrice(item.product.originalPrice) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Controls -->
+                    <div class="quantity-controls">
+                        <button (click)="updateQuantity(item, item.quantity - 1)" class="qty-btn"
+                            [disabled]="item.quantity <= 1">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="qty-display">{{ item.quantity }}</span>
+                        <button (click)="updateQuantity(item, item.quantity + 1)" class="qty-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Total -->
+                    <div class="item-total">
+                        <div class="total-price">{{ formatPrice(item.price * item.quantity) }}</div>
+                        <button (click)="removeItem(item)" class="remove-btn" title="Xóa sản phẩm">
+                            <i class="fas fa-trash"></i>
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <div class="summary-header">
+                    <h3>Tổng đơn hàng</h3>
+                </div>
+
+                <div class="summary-items">
+                    <div class="summary-item">
+                        <span class="item-label">Tạm tính ({{ getItemCount() }} sản phẩm)</span>
+                        <span class="item-value">{{ formatPrice(getSubtotal()) }}</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="item-label">Phí vận chuyển</span>
+                        <span class="item-value">
+                            {{ getShippingCost() === 0 ? 'Miễn phí' : formatPrice(getShippingCost()) }}
+                        </span>
+                    </div>
+
+                    <!-- Discount -->
+                    <div class="summary-item" *ngIf="getDiscountAmount() > 0">
+                        <span class="item-label">Giảm giá ({{ getDiscountPercentage() }}%)</span>
+                        <span class="item-value">-{{ formatPrice(getDiscountAmount()) }}</span>
+                    </div>
+
+                    <div class="summary-item total">
+                        <span class="item-label">Tổng cộng</span>
+                        <span class="item-value">{{ formatPrice(getFinalTotal()) }}</span>
+                    </div>
+                </div>
+
+                <!-- Checkout Button -->
+                <a [routerLink]="['/checkout']" class="checkout-btn">
+                    <i class="fas fa-credit-card"></i>
+                    Tiến hành thanh toán
+                </a>
+
+                <!-- Cart Features -->
+                <div class="cart-features">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Thanh toán an toàn</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-undo"></i>
+                        <span>Đổi trả miễn phí 30 ngày</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-truck"></i>
+                        <span>Giao hàng toàn quốc</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
