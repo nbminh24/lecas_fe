@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../core/services/product';
 import { CartService } from '../../../core/services/cart';
 import { Product } from '../../../core/models/product.interface';
+import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ShopServiceFeaturesComponent],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
 })
@@ -131,5 +132,9 @@ export class ProductDetail implements OnInit {
 
   isColorAvailable(color: string): boolean {
     return this.product?.colors.some(c => c.name === color) || false;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/products']);
   }
 }

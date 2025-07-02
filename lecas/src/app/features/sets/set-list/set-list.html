@@ -1,0 +1,88 @@
+<div class="set-list-page">
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Set Đồ</h1>
+            <p class="page-subtitle">Khám phá bộ sưu tập set đồ thời trang nam hiện đại</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+            <p>Đang tải set đồ...</p>
+        </div>
+
+        <!-- Search and Sort -->
+        <div class="search-sort-section" *ngIf="!isLoading">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm kiếm set đồ..." [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                    class="search-input">
+            </div>
+
+            <div class="sort-controls">
+                <select [(ngModel)]="selectedSort" (change)="onSortChange()" class="sort-select">
+                    <option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label }}</option>
+                </select>
+
+                <button (click)="toggleSortOrder()" class="sort-order-btn">
+                    <i class="fas" [class.fa-sort-amount-up]="sortOrder === 'asc'"
+                        [class.fa-sort-amount-down]="sortOrder === 'desc'"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-wrapper" *ngIf="!isLoading">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar" [class.show-filters]="showFilters">
+                <div class="filters-header">
+                    <h3>Bộ Lọc</h3>
+                    <button (click)="clearFilters()" class="clear-filters-btn">
+                        <i class="fas fa-times"></i>
+                        Xóa tất cả
+                    </button>
+                </div>
+
+                <!-- Category Filter (Example, adjust as needed for sets) -->
+                <div class="filter-section">
+                    <h4>Danh Mục Set</h4>
+                    <div class="filter-options">
+                        <button *ngFor="let category of categories"
+                            (click)="selectedCategory = category.value; onCategoryChange()" class="filter-option"
+                            [class.active]="selectedCategory === category.value">
+                            {{ category.label }}
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Sets Grid -->
+            <main class="sets-section">
+                <div class="sets-header">
+                    <div class="results-info">
+                        <span>{{ filteredSets.length }} set đồ</span>
+                    </div>
+                    <button (click)="toggleFilters()" class="toggle-filters-btn">
+                        <i class="fas fa-filter"></i>
+                        Bộ lọc
+                    </button>
+                </div>
+
+                <div class="sets-grid" *ngIf="filteredSets.length > 0">
+                    <app-set-card *ngFor="let set of filteredSets" [set]="set">
+                        <!-- Removed: <a [routerLink]="['/sets', set.id]" class="btn btn-primary">Xem chi tiết</a> -->
+                    </app-set-card>
+                </div>
+
+                <div class="no-results" *ngIf="filteredSets.length === 0">
+                    <i class="fas fa-search"></i>
+                    <h3>Không tìm thấy set đồ</h3>
+                    <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                    <button (click)="clearFilters()" class="btn btn-primary">
+                        Xóa bộ lọc
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>

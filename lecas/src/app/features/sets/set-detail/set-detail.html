@@ -1,0 +1,68 @@
+﻿<div class="set-detail-page">
+    <div class="container">
+        <div class="loading-state" *ngIf="!set">
+            <div class="loading-spinner"></div>
+            <p>Đang tải thông tin set đồ...</p>
+        </div>
+        <div class="product-detail-content" *ngIf="set">
+            <div class="product-layout">
+                <div class="set-image">
+                    <img [src]="set.image" [alt]="set.name" />
+                </div>
+                <div class="set-info">
+                    <button class="go-back-btn" (click)="goBack()">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                    <h1 class="set-name">{{ set.name }}</h1>
+                    <p class="set-description">{{ set.description }}</p>
+
+                    <!-- Rating -->
+                    <div class="set-rating" *ngIf="set.rating">
+                        <div class="stars">
+                            <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star" [class.filled]="star <= set.rating"
+                                [class.half]="star === Math.ceil(set.rating) && set.rating % 1 !== 0"></i>
+                        </div>
+                        <span class="rating-value">({{ set.rating | number: '1.1-1' }})</span>
+                    </div>
+
+                    <div class="set-products">
+                        <h3>Sản phẩm trong set</h3>
+                        <ul>
+                            <li *ngFor="let p of set.products" class="set-product-card">
+                                <img [src]="p.image" [alt]="p.name" class="product-thumb" />
+                                <div class="set-product-info">
+                                    <span class="set-product-name">{{ p.name }}</span>
+                                    <div class="product-options-inline">
+                                        <div class="size-options-mini" *ngIf="p.size.length > 0">
+                                            <span class="label">Size:</span>
+                                            <button *ngFor="let size of p.size"
+                                                (click)="selectedOptions[p.id].size = size" class="size-option-mini"
+                                                [class.selected]="selectedOptions[p.id].size === size">
+                                                {{ size }}
+                                            </button>
+                                        </div>
+                                        <div class="color-options-mini" *ngIf="p.color.length > 0">
+                                            <span class="label">Màu:</span>
+                                            <button *ngFor="let color of p.color"
+                                                (click)="selectedOptions[p.id].color = color.name"
+                                                class="color-option-mini"
+                                                [class.selected]="selectedOptions[p.id].color === color.name"
+                                                [style.background-color]="color.code" [attr.title]="color.name">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="set-price">Giá: {{ set.price | number }}₫</div>
+                    <div class="set-actions">
+                        <button class="btn btn-primary" (click)="addToCart()">Thêm vào giỏ hàng</button>
+                        <button class="btn btn-secondary" (click)="buyNow()">Mua ngay</button>
+                    </div>
+                    <app-shop-service-features></app-shop-service-features>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart';
 import { CartItem } from '../../../core/models/cart.interface';
+import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ShopServiceFeaturesComponent],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'
 })

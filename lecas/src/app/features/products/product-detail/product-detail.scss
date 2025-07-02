@@ -607,3 +607,26 @@
         }
     }
 }
+
+.go-back-btn {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0;
+    transition: color 0.2s ease;
+    margin-bottom: 8px;
+
+    &:hover {
+        color: var(--color-primary-dark);
+    }
+
+    i {
+        font-size: 0.9rem;
+    }
+}

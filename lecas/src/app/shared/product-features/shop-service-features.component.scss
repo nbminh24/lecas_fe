@@ -1,0 +1,26 @@
+.product-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
+}
+
+.feature i {
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
+    width: 20px;
+}
+
+.feature span {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}

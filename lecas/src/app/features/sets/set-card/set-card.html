@@ -1,0 +1,49 @@
+<div class="set-card">
+    <!-- Set Image -->
+    <div class="set-image">
+        <img [src]="set.image" [alt]="set.name" class="main-image" />
+        <div class="quick-actions">
+            <button class="action-btn wishlist-btn" title="Thêm vào yêu thích">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="action-btn quick-view-btn" title="Xem nhanh">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Set Info -->
+    <div class="set-info">
+        <h3 class="set-name">
+            <a [routerLink]="['/sets', set.id]">{{ set.name }}</a>
+        </h3>
+        <div class="set-description">{{ set.description }}</div>
+
+        <!-- Included Products Thumbnails -->
+        <div class="included-products">
+            <div class="product-thumb" *ngFor="let p of set.products" [title]="p.name">
+                <img [src]="p.image" [alt]="p.name" />
+            </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="set-rating" *ngIf="set.rating">
+            <div class="stars">
+                <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star" [class.filled]="star <= set.rating"
+                    [class.half]="star === Math.ceil(set.rating) && set.rating % 1 !== 0"></i>
+            </div>
+            <span class="rating-value">{{ set.rating | number: '1.1-1' }}</span>
+        </div>
+
+        <!-- Price -->
+        <div class="set-price">{{ set.price | number }}₫</div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="add-to-cart-btn">Thêm vào giỏ</button>
+            <button class="buy-now-btn">Mua ngay</button>
+        </div>
+        <a [routerLink]="['/sets', set.id]" class="detail-btn">Xem chi tiết</a>
+        <ng-content></ng-content>
+    </div>
+</div>

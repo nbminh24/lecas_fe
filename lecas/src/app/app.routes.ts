@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/orders/order-list/order-list').then(m => m.OrderList)
     },
     {
+        path: 'sets',
+        loadChildren: () => import('./features/sets/sets-module').then(m => m.routes)
+    },
+    {
         path: '**',
         redirectTo: ''
     }
