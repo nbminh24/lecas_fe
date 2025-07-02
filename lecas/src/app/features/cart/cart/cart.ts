@@ -5,17 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart';
 import { CartItem } from '../../../core/models/cart.interface';
 import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
+import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ShopServiceFeaturesComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ShopServiceFeaturesComponent, PaginationComponent],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'
 })
 export class Cart implements OnInit {
   cartItems: CartItem[] = [];
   isLoading = true;
+  currentPage = 1;
+  pageSize = 20;
 
   constructor(private cartService: CartService) { }
 
@@ -93,5 +96,14 @@ export class Cart implements OnInit {
 
   getItemCount(): number {
     return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  get pagedCartItems() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.cartItems.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
   }
 }

@@ -14,7 +14,7 @@
                 <i class="fas fa-box-open"></i>
                 <p>Không có đơn hàng nào.</p>
             </div>
-            <div *ngFor="let order of filteredOrders" class="order-card">
+            <div *ngFor="let order of pagedOrders" class="order-card">
                 <div class="order-card-row">
                     <div class="order-card-info">
                         <div class="order-products-list">
@@ -28,9 +28,13 @@
                     <div class="order-card-meta">
                         <div class="order-total">Tổng tiền: <b>{{ order.total | number }}₫</b></div>
                         <button class="order-detail-btn" (click)="openDetail(order)">Xem chi tiết</button>
+                        <button *ngIf="order.status === 'delivered' && order.canReview" class="review-btn"
+                            (click)="reviewOrder(order)"><i class="fas fa-star"></i> Đánh giá đơn hàng</button>
                     </div>
                 </div>
             </div>
+            <app-pagination [totalItems]="filteredOrders.length" [pageSize]="pageSize" [currentPage]="currentPage"
+                (pageChange)="onPageChange($event)"></app-pagination>
         </div>
     </div>
 
@@ -92,5 +96,38 @@
             </div>
         </div>
         <div class="order-detail-backdrop" (click)="closeDetail()"></div>
+    </div>
+
+    <!-- Popup đánh giá sản phẩm -->
+    <div class="review-modal-overlay" *ngIf="showReviewModal">
+        <div class="review-modal">
+            <button class="close-btn" (click)="closeReviewModal()"><i class="fas fa-times"></i></button>
+            <h2>Đánh giá sản phẩm</h2>
+            <form (ngSubmit)="submitReview()">
+                <div *ngFor="let p of reviewOrderProducts" class="review-product-item">
+                    <img [src]="p.image" [alt]="p.name" class="review-thumb" />
+                    <div class="review-product-info">
+                        <div class="product-name">{{ p.name }}</div>
+                        <div class="rating-stars">
+                            <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star"
+                                [class.filled]="reviewData[p.id] && reviewData[p.id].rating >= star"
+                                (click)="reviewData[p.id] && (reviewData[p.id].rating = star)"></i>
+                        </div>
+                        <textarea *ngIf="reviewData[p.id]" [(ngModel)]="reviewData[p.id].comment"
+                            name="comment-{{p.id}}" placeholder="Nhận xét của bạn..." rows="2"></textarea>
+                        <div class="review-attach">
+                            <label class="attach-label">
+                                <i class="fas fa-paperclip"></i> Đính kèm ảnh
+                                <input type="file" accept="image/*" (change)="onAttachImage($event, p.id)" hidden />
+                            </label>
+                            <img *ngIf="reviewData[p.id]?.imageUrl" [src]="reviewData[p.id].imageUrl"
+                                class="attach-preview" alt="Ảnh đính kèm" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="submit-review-btn">Gửi đánh giá</button>
+            </form>
+        </div>
+        <div class="review-modal-backdrop" (click)="closeReviewModal()"></div>
     </div>
 </div>

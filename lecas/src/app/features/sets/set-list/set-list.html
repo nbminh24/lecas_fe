@@ -69,10 +69,12 @@
                 </div>
 
                 <div class="sets-grid" *ngIf="filteredSets.length > 0">
-                    <app-set-card *ngFor="let set of filteredSets" [set]="set">
+                    <app-set-card *ngFor="let set of pagedSets" [set]="set">
                         <!-- Removed: <a [routerLink]="['/sets', set.id]" class="btn btn-primary">Xem chi tiết</a> -->
                     </app-set-card>
                 </div>
+                <app-pagination [totalItems]="filteredSets.length" [pageSize]="pageSize" [currentPage]="currentPage"
+                    (pageChange)="onPageChange($event)"></app-pagination>
 
                 <div class="no-results" *ngIf="filteredSets.length === 0">
                     <i class="fas fa-search"></i>

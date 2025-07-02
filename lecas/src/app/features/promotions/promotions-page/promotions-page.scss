@@ -1,0 +1,398 @@
+.promotions-page {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 32px 0 48px 0;
+}
+
+.promo-banner-slider {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    margin-bottom: 28px;
+}
+
+.promo-banner img {
+    width: 340px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
+    background: #f5f5f5;
+}
+
+.promo-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #232323;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.claim-all-btn {
+    width: 100%;
+    background: #232323;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.claim-all-btn:hover {
+    background: #444;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+.coupon-list-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.coupon-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid #232323;
+    border-radius: 8px;
+    padding: 12px 18px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.18s, border 0.18s;
+}
+
+.coupon-list-item:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    border: 1.5px solid #111;
+}
+
+.coupon-list-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.coupon-list-code {
+    font-size: 16px;
+    font-weight: 700;
+    color: #232323;
+    letter-spacing: 0.5px;
+}
+
+.coupon-list-desc {
+    font-size: 14px;
+    color: #444;
+}
+
+.coupon-list-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.coupon-list-discount {
+    font-weight: 700;
+    color: #232323;
+    font-size: 15px;
+}
+
+.coupon-list-program {
+    color: #888;
+}
+
+.coupon-list-expiry {
+    color: #bdbdbd;
+}
+
+.coupon-list-remaining {
+    color: #232323;
+    font-weight: 600;
+}
+
+.claim-btn {
+    background: #232323;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    margin-left: 8px;
+}
+
+.claim-btn:hover:not(:disabled) {
+    background: #444;
+}
+
+.claim-btn.claimed,
+.claim-btn:disabled {
+    background: #bdbdbd;
+    color: #fff;
+    cursor: default;
+}
+
+@media (max-width: 600px) {
+    .promotions-page {
+        padding: 18px 0 32px 0;
+        max-width: 99vw;
+    }
+
+    .promo-banner img {
+        width: 90vw;
+        height: 90px;
+    }
+
+    .coupon-list-item {
+        padding: 10px 6vw;
+    }
+}
+
+.promotions-page.split-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 0 48px 0;
+}
+
+.promo-banner-slider.full-width {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    margin-bottom: 32px;
+    padding-top: 32px;
+}
+
+.split-content {
+    display: flex;
+    flex-direction: row;
+    gap: 36px;
+}
+
+.left-col {
+    flex: 1.1;
+    min-width: 0;
+}
+
+.right-col {
+    flex: 1;
+    min-width: 0;
+}
+
+.hot-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #232323;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hot-product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hot-product-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1.5px solid #232323;
+    border-radius: 10px;
+    padding: 14px 18px;
+    gap: 16px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.18s, border 0.18s;
+}
+
+.hot-product-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    border: 1.5px solid #111;
+}
+
+.hot-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1.5px solid #d1d1d1;
+    background: #fafafa;
+}
+
+.hot-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hot-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: #232323;
+}
+
+.hot-desc {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 2px;
+}
+
+.hot-prices {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+}
+
+.hot-sale-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #232323;
+}
+
+.hot-price {
+    font-size: 14px;
+    color: #bdbdbd;
+    text-decoration: line-through;
+}
+
+.hot-discount {
+    font-size: 13px;
+    color: #fff;
+    background: #232323;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+.hot-remaining-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.hot-bar-bg {
+    width: 90px;
+    height: 8px;
+    background: #e5e5e5;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.hot-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #232323 60%, #444 100%);
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.hot-remaining-text {
+    font-size: 12px;
+    color: #232323;
+    font-weight: 600;
+}
+
+.hot-action-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.hot-add-cart-btn,
+.hot-buy-now-btn {
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 9px 0;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.18s, color 0.18s;
+}
+
+.hot-add-cart-btn {
+    background: #232323;
+    color: #fff;
+}
+
+.hot-add-cart-btn:hover {
+    background: #444;
+}
+
+.hot-buy-now-btn {
+    background: #fff;
+    color: #232323;
+    border: 1.5px solid #232323;
+}
+
+.hot-buy-now-btn:hover {
+    background: #232323;
+    color: #fff;
+}
+
+.hot-action-btns-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    align-items: flex-end;
+    margin-left: 18px;
+}
+
+.hot-add-cart-btn.small,
+.hot-buy-now-btn.small {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 5px;
+    min-width: 90px;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .split-content {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .promo-banner-slider.full-width {
+        padding-top: 18px;
+        margin-bottom: 18px;
+    }
+
+    .hot-product-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hot-action-btns-inline {
+        flex-direction: row;
+        align-items: center;
+        margin-left: 0;
+        margin-top: 8px;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+}

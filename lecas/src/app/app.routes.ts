@@ -38,6 +38,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/sets/sets-module').then(m => m.routes)
     },
     {
+        path: 'promotions',
+        loadComponent: () => import('./features/promotions/promotions-page/promotions-page').then(m => m.PromotionsPageComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }

@@ -1,0 +1,8 @@
+<nav class="pagination">
+    <button class="page-btn prev" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">&lt;</button>
+    <ng-container *ngFor="let page of pages">
+        <button class="page-btn" [class.active]="page === currentPage" (click)="goTo(page)">{{ page }}</button>
+    </ng-container>
+    <button class="page-btn next" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">&gt;</button>
+    <span class="page-info">Trang {{ currentPage }} / {{ totalPages }}</span>
+</nav>

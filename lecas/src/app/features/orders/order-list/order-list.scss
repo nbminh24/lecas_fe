@@ -515,3 +515,214 @@
     margin-left: 8px;
     font-weight: 500;
 }
+
+.review-modal-overlay {
+    position: fixed;
+    z-index: 1002;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+}
+
+.review-modal {
+    background: #fff;
+    color: #232323;
+    border-radius: 14px;
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.16);
+    padding: 36px 28px 28px 28px;
+    min-width: 340px;
+    max-width: 95vw;
+    width: 420px;
+    max-height: 92vh;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+}
+
+.review-modal .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+.review-modal h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #181818;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.review-product-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+    border-bottom: 1.5px solid #e5e5e5;
+    padding-bottom: 16px;
+}
+
+.review-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #d1d1d1;
+    background: #fafafa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.review-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.review-product-info .product-name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 2px;
+    color: #232323;
+    letter-spacing: 0.2px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.rating-stars .fa-star {
+    color: #bdbdbd;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.18s;
+}
+
+.rating-stars .fa-star.filled {
+    color: #232323;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+textarea {
+    width: 100%;
+    border: 1.5px solid #d1d1d1;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    background: #fafbfc;
+    margin-bottom: 4px;
+    transition: border 0.2s;
+}
+
+textarea:focus {
+    border: 1.5px solid #232323;
+    outline: none;
+}
+
+.review-attach {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.attach-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #232323;
+    font-weight: 500;
+    background: #f3f3f3;
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    border: 1.2px solid #d1d1d1;
+    transition: background 0.18s, border 0.18s;
+}
+
+.attach-label:hover {
+    background: #e9e9e9;
+    border: 1.2px solid #232323;
+}
+
+.attach-label i {
+    font-size: 15px;
+    margin-right: 2px;
+}
+
+.attach-preview {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1.2px solid #bdbdbd;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.submit-review-btn {
+    width: 100%;
+    background: linear-gradient(90deg, #232323 60%, #444 100%);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 0;
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.submit-review-btn:hover {
+    background: linear-gradient(90deg, #444 60%, #232323 100%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+@media (max-width: 600px) {
+    .review-modal {
+        min-width: 90vw;
+        padding: 18px 6vw 18px 6vw;
+        width: 98vw;
+    }
+
+    .review-thumb {
+        width: 44px;
+        height: 44px;
+    }
+
+    .attach-preview {
+        width: 30px;
+        height: 30px;
+    }
+}

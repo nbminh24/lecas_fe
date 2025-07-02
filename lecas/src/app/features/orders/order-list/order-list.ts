@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
 interface OrderProduct {
   id: number;
@@ -40,7 +41,7 @@ interface Order {
   templateUrl: './order-list.html',
   styleUrl: './order-list.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, PaginationComponent]
 })
 export class OrderList {
   tabs = [
@@ -53,6 +54,12 @@ export class OrderList {
   selectedTab = 'all';
   searchTerm = '';
   showDetail: Order | null = null;
+  showReviewModal = false;
+  reviewOrderProducts: OrderProduct[] = [];
+  reviewOrderId: string | null = null;
+  reviewData: { [productId: number]: { rating: number, comment: string, imageUrl?: string } } = {};
+  currentPage = 1;
+  pageSize = 20;
 
   orders: Order[] = [
     {
@@ -142,6 +149,11 @@ export class OrderList {
     return filtered.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
+  get pagedOrders() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredOrders.slice(start, start + this.pageSize);
+  }
+
   selectTab(tab: string) {
     this.selectedTab = tab;
   }
@@ -161,7 +173,26 @@ export class OrderList {
 
   reviewOrder(order: Order | null) {
     if (!order) return;
-    alert('Chức năng đánh giá sản phẩm sẽ được bổ sung!');
+    this.reviewOrderProducts = order.products;
+    this.reviewOrderId = order.id;
+    this.showReviewModal = true;
+    this.reviewData = {};
+    for (const p of order.products) {
+      this.reviewData[p.id] = { rating: 5, comment: '', imageUrl: undefined };
+    }
+  }
+
+  closeReviewModal() {
+    this.showReviewModal = false;
+    this.reviewOrderProducts = [];
+    this.reviewOrderId = null;
+  }
+
+  submitReview() {
+    alert('Đã gửi đánh giá!\n' + JSON.stringify(this.reviewData, null, 2));
+    this.closeReviewModal();
+    const order = this.orders.find(o => o.id === this.reviewOrderId);
+    if (order) order.canReview = false;
   }
 
   getStatusLabel(status: string | undefined | null): string {
@@ -172,5 +203,22 @@ export class OrderList {
 
   getProductNames(order: Order): string {
     return order.products.map(p => p.name).join(', ');
+  }
+
+  onAttachImage(event: Event, productId: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (!this.reviewData[productId]) return;
+        this.reviewData[productId].imageUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
   }
 }

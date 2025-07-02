@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SetCard } from '../set-card/set-card';
+import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
 interface SetIncludedProduct {
     id: number;
@@ -28,7 +29,7 @@ interface Set {
 @Component({
     selector: 'app-set-list',
     standalone: true,
-    imports: [CommonModule, RouterLink, SetCard, FormsModule],
+    imports: [CommonModule, RouterLink, SetCard, FormsModule, PaginationComponent],
     templateUrl: './set-list.html',
     styleUrls: ['./set-list.scss']
 })
@@ -72,6 +73,8 @@ export class SetList implements OnInit {
     selectedSort = 'name';
     sortOrder: 'asc' | 'desc' = 'asc';
     showFilters = false;
+    currentPage = 1;
+    pageSize = 40;
 
     categories = [
         { value: '', label: 'Tất cả' },
@@ -204,5 +207,14 @@ export class SetList implements OnInit {
 
     toggleFilters(): void {
         this.showFilters = !this.showFilters;
+    }
+
+    get pagedSets() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        return this.filteredSets.slice(start, start + this.pageSize);
+    }
+
+    onPageChange(page: number) {
+        this.currentPage = page;
     }
 } 

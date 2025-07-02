@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product';
 import { Product, ProductCategory } from '../../../core/models/product.interface';
 import { ProductCard } from '../../../shared/product-card/product-card';
+import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductCard],
+  imports: [CommonModule, FormsModule, ProductCard, PaginationComponent],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss'
 })
@@ -22,6 +23,8 @@ export class ProductList implements OnInit {
   selectedSort = 'name';
   sortOrder: 'asc' | 'desc' = 'asc';
   showFilters = false;
+  currentPage = 1;
+  pageSize = 40;
 
   categories = [
     { value: '', label: 'Tất cả' },
@@ -180,5 +183,14 @@ export class ProductList implements OnInit {
       case ProductCategory.ACCESSORIES: return 'Phụ Kiện';
       default: return category;
     }
+  }
+
+  get pagedProducts() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredProducts.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
   }
 }
