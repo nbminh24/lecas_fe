@@ -1,1 +1,96 @@
-<p>order-list works!</p>
+<div class="order-list-page">
+    <div class="container">
+        <h1 class="order-title">Đơn hàng của tôi</h1>
+        <div class="order-tabs">
+            <button *ngFor="let tab of tabs" (click)="selectTab(tab.value)"
+                [class.active]="selectedTab === tab.value">{{ tab.label }}</button>
+        </div>
+        <div class="order-search">
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Tìm theo tên hoặc mã đơn hàng" />
+            <button class="search-btn" type="button"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="order-list">
+            <div *ngIf="filteredOrders.length === 0" class="order-empty">
+                <i class="fas fa-box-open"></i>
+                <p>Không có đơn hàng nào.</p>
+            </div>
+            <div *ngFor="let order of filteredOrders" class="order-card">
+                <div class="order-card-row">
+                    <div class="order-card-info">
+                        <div class="order-products-list">
+                            {{ getProductNames(order) }}
+                            <span *ngIf="selectedTab === 'all'" class="order-status-inline">- {{
+                                getStatusLabel(order.status) }}</span>
+                        </div>
+                        <div class="order-id">#{{ order.id }}</div>
+                        <div class="order-date">Ngày đặt: {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+                    <div class="order-card-meta">
+                        <div class="order-total">Tổng tiền: <b>{{ order.total | number }}₫</b></div>
+                        <button class="order-detail-btn" (click)="openDetail(order)">Xem chi tiết</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay chi tiết đơn hàng -->
+    <div class="order-detail-overlay" *ngIf="showDetail">
+        <div class="order-detail-modal">
+            <button class="close-btn" (click)="closeDetail()"><i class="fas fa-times"></i></button>
+            <h2>Chi tiết đơn hàng</h2>
+            <div class="order-detail-section">
+                <div class="order-info">
+                    <div><b>Mã đơn:</b> #{{ showDetail?.id }}</div>
+                    <div><b>Ngày đặt:</b> {{ showDetail?.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                    <div><b>Trạng thái:</b> <span class="order-status" [class]="'order-status ' + showDetail?.status">{{
+                            getStatusLabel(showDetail?.status) }}</span></div>
+                    <div><b>Phương thức thanh toán:</b> {{ showDetail?.payment }}</div>
+                    <div><b>Tổng tiền:</b> <span class="order-total">{{ showDetail?.total | number }}₫</span></div>
+                </div>
+                <div class="shipping-info">
+                    <div><b>Người nhận:</b> {{ showDetail?.shippingInfo?.name }}</div>
+                    <div><b>SĐT:</b> {{ showDetail?.shippingInfo?.phone }}</div>
+                    <div><b>Địa chỉ:</b> {{ showDetail?.shippingInfo?.address }}</div>
+                    <div *ngIf="showDetail?.shippingInfo?.note"><b>Ghi chú:</b> {{ showDetail?.shippingInfo?.note }}
+                    </div>
+                </div>
+            </div>
+            <div class="order-products">
+                <h3>Sản phẩm</h3>
+                <div class="order-product-list">
+                    <div *ngFor="let p of showDetail?.products" class="order-product-item">
+                        <img [src]="p.image" [alt]="p.name" />
+                        <div class="product-info">
+                            <div class="product-name">{{ p.name }}</div>
+                            <div class="product-variant">Màu: {{ p.color }} | Size: {{ p.size }}</div>
+                            <div class="product-qty">Số lượng: {{ p.quantity }}</div>
+                            <div class="product-price">{{ p.price | number }}₫</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order-tracking">
+                <h3>Quá trình vận chuyển</h3>
+                <div class="tracking-timeline">
+                    <div *ngFor="let t of showDetail?.tracking; let last = last" class="tracking-step"
+                        [class.active]="last || t.status === 'Đã giao thành công'">
+                        <div class="step-dot"></div>
+                        <div class="step-info">
+                            <div class="step-status">{{ t.status }}</div>
+                            <div class="step-location">{{ t.location }}</div>
+                            <div class="step-time">{{ t.time }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order-detail-actions">
+                <button class="support-btn" (click)="contactSupport(showDetail)"><i class="fas fa-headset"></i> Liên hệ
+                    hỗ trợ</button>
+                <button *ngIf="showDetail?.canReview" class="review-btn" (click)="reviewOrder(showDetail)"><i
+                        class="fas fa-star"></i> Đánh giá đơn hàng</button>
+            </div>
+        </div>
+        <div class="order-detail-backdrop" (click)="closeDetail()"></div>
+    </div>
+</div>

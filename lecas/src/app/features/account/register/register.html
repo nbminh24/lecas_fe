@@ -1,1 +1,21 @@
-<p>register works!</p>
+<div class="auth-bg">
+    <div class="auth-card">
+        <h1 class="auth-title">Sign up</h1>
+        <button class="google-btn" type="button">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"
+                class="google-icon" />
+            Sign up with Google
+        </button>
+        <div class="divider">or</div>
+        <form>
+            <label class="auth-label">EMAIL</label>
+            <input class="auth-input" type="email" placeholder="Enter your email" disabled />
+            <label class="auth-label">PASSWORD</label>
+            <input class="auth-input" type="password" placeholder="Enter your password" disabled />
+            <button class="auth-btn" type="submit" disabled>SIGN UP</button>
+        </form>
+        <div class="auth-footer">
+            Already have an account? <a routerLink="/login">Log in</a>
+        </div>
+    </div>
+</div>

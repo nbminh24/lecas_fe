@@ -1,0 +1,129 @@
+// Nền xám nhạt
+.auth-bg {
+    min-height: 100vh;
+    background: #fafbfc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem 2rem 2rem;
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-family: 'Georgia', serif;
+}
+
+.google-btn {
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 0.7rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 1.2rem;
+    transition: box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.google-btn:hover {
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.10);
+    border-color: #bdbdbd;
+}
+
+.google-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.divider {
+    text-align: center;
+    color: #bbb;
+    margin: 0.5rem 0 1.2rem 0;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.divider:before,
+.divider:after {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: #eee;
+    vertical-align: middle;
+    margin: 0 8px;
+}
+
+.auth-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.2rem;
+    margin-top: 0.7rem;
+    display: block;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    background: #f6f8fa;
+    color: #aaa;
+}
+
+.auth-input:disabled {
+    background: #f6f8fa;
+    color: #aaa;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 0.8rem 0;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+}
+
+.auth-footer a {
+    color: #222;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: 4px;
+}
