@@ -1,8 +1,12 @@
 import { HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 
+function isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+}
+
 export const AuthInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next) => {
     let token = '';
-    if (typeof window !== 'undefined' && localStorage) {
+    if (isBrowser()) {
         token = localStorage.getItem('accessToken') || '';
     }
 

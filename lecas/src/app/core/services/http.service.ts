@@ -11,6 +11,10 @@ export interface ApiResponse<T = any> {
     errors?: Array<{ field: string; message: string }>;
 }
 
+function isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -26,7 +30,7 @@ export class HttpService {
 
     private getHeaders(): HttpHeaders {
         let token = '';
-        if (typeof localStorage !== 'undefined') {
+        if (isBrowser()) {
             token = localStorage.getItem('accessToken') || '';
         }
         return new HttpHeaders({
@@ -82,7 +86,7 @@ export class HttpService {
     private handleTokenRefresh(error: HttpErrorResponse): Observable<never> {
         this.isRefreshing = true;
         let refreshToken = '';
-        if (typeof localStorage !== 'undefined') {
+        if (isBrowser()) {
             refreshToken = localStorage.getItem('refreshToken') || '';
         }
 
@@ -97,7 +101,7 @@ export class HttpService {
         ).pipe(
             tap(response => {
                 if (response.success && response.data) {
-                    if (typeof localStorage !== 'undefined') {
+                    if (isBrowser()) {
                         localStorage.setItem('accessToken', response.data.accessToken);
                         localStorage.setItem('refreshToken', response.data.refreshToken);
                     }
@@ -116,7 +120,7 @@ export class HttpService {
     }
 
     private logout(): void {
-        if (typeof localStorage !== 'undefined') {
+        if (isBrowser()) {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');

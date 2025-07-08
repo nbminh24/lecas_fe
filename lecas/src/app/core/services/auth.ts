@@ -13,6 +13,10 @@ import {
   AddAddressRequest
 } from '../models/user.interface';
 
+function isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +30,7 @@ export class Auth {
 
   private loadUserFromStorage(): void {
     let userStr = null;
-    if (typeof window !== 'undefined' && localStorage) {
+    if (isBrowser()) {
       userStr = localStorage.getItem('user');
     }
     if (userStr) {
@@ -44,7 +48,7 @@ export class Auth {
     return this.httpService.post<LoginResponse>('/auth/login', credentials).pipe(
       map(response => response.data!),
       tap(data => {
-        if (typeof window !== 'undefined' && localStorage) {
+        if (isBrowser()) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('user', JSON.stringify(data.user));
@@ -58,7 +62,7 @@ export class Auth {
     return this.httpService.post<LoginResponse>('/Auth/google-login', request).pipe(
       map(response => response.data!),
       tap(data => {
-        if (typeof window !== 'undefined' && localStorage) {
+        if (isBrowser()) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           localStorage.setItem('user', JSON.stringify(data.user));
@@ -72,7 +76,7 @@ export class Auth {
     return this.httpService.post<LoginResponse>('/auth/refresh-token', request).pipe(
       map(response => response.data!),
       tap(data => {
-        if (typeof window !== 'undefined' && localStorage) {
+        if (isBrowser()) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
         }
@@ -82,7 +86,7 @@ export class Auth {
 
   logout(): Observable<any> {
     let refreshToken = '';
-    if (typeof window !== 'undefined' && localStorage) {
+    if (isBrowser()) {
       refreshToken = localStorage.getItem('refreshToken') || '';
     }
     if (refreshToken) {
@@ -98,7 +102,7 @@ export class Auth {
   }
 
   private clearAuthData(): void {
-    if (typeof window !== 'undefined' && localStorage) {
+    if (isBrowser()) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
@@ -125,7 +129,7 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, ...updatedUser };
-          if (typeof window !== 'undefined' && localStorage) {
+          if (isBrowser()) {
             localStorage.setItem('user', JSON.stringify(newUser));
           }
           this.currentUserSubject.next(newUser);
@@ -145,7 +149,7 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, addresses: updatedUser.addresses };
-          if (typeof window !== 'undefined' && localStorage) {
+          if (isBrowser()) {
             localStorage.setItem('user', JSON.stringify(newUser));
           }
           this.currentUserSubject.next(newUser);
@@ -161,7 +165,7 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, addresses: updatedUser.addresses };
-          if (typeof window !== 'undefined' && localStorage) {
+          if (isBrowser()) {
             localStorage.setItem('user', JSON.stringify(newUser));
           }
           this.currentUserSubject.next(newUser);
@@ -179,7 +183,7 @@ export class Auth {
   }
 
   isAuthenticated(): boolean {
-    if (typeof window !== 'undefined' && localStorage) {
+    if (isBrowser()) {
       return !!localStorage.getItem('accessToken');
     }
     return false;
