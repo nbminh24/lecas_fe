@@ -49,8 +49,8 @@
                     </button>
                     <div class="product-header">
                         <h1 class="product-title">{{ product.name }}</h1>
-                        <div class="product-category">
-                            {{ getCategoryDisplayName(product.category) }} / {{ product.subCategory }}
+                        <div class="product-category" *ngIf="product.category">
+                            {{ product.category.name }}
                         </div>
                     </div>
 
@@ -80,31 +80,6 @@
                         <p>{{ product.description }}</p>
                     </div>
 
-                    <!-- Size Selection -->
-                    <div class="product-options" *ngIf="product.sizes.length > 0">
-                        <h3>Kích thước</h3>
-                        <div class="size-options">
-                            <button *ngFor="let size of ['S', 'M', 'L', 'XL', '28', '30', '32', '34', '36']"
-                                (click)="selectSize(size)" class="size-option" [class.selected]="selectedSize === size"
-                                [class.available]="isSizeAvailable(size)" [disabled]="!isSizeAvailable(size)">
-                                {{ size }}
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Color Selection -->
-                    <div class="product-options" *ngIf="product.colors.length > 0">
-                        <h3>Màu sắc</h3>
-                        <div class="color-options">
-                            <button *ngFor="let color of product.colors" (click)="selectColor(color.name)"
-                                class="color-option" [class.selected]="selectedColor === color.name"
-                                [style.background-color]="color.code" [title]="color.name"></button>
-                        </div>
-                        <span class="selected-color-name" *ngIf="selectedColor">
-                            {{ selectedColor }}
-                        </span>
-                    </div>
-
                     <!-- Quantity -->
                     <div class="product-options">
                         <h3>Số lượng</h3>
@@ -117,14 +92,12 @@
 
                     <!-- Action Buttons -->
                     <div class="product-actions">
-                        <button (click)="addToCart()" class="btn btn-primary add-to-cart-btn"
-                            [disabled]="!selectedSize || !selectedColor">
+                        <button (click)="addToCart()" class="btn btn-primary add-to-cart-btn">
                             <i class="fas fa-shopping-cart"></i>
                             Thêm vào giỏ hàng
                         </button>
 
-                        <button (click)="buyNow()" class="btn btn-accent buy-now-btn"
-                            [disabled]="!selectedSize || !selectedColor">
+                        <button (click)="buyNow()" class="btn btn-accent buy-now-btn">
                             <i class="fas fa-bolt"></i>
                             Mua ngay
                         </button>
@@ -147,7 +120,7 @@
                     <div class="tab-panel active">
                         <h3>Thông tin chi tiết</h3>
                         <ul class="product-details">
-                            <li><strong>Danh mục:</strong> {{ getCategoryDisplayName(product.category) }}</li>
+                            <li><strong>Danh mục:</strong> {{ product.category?.name || 'N/A' }}</li>
                             <li><strong>Chất liệu:</strong> Cotton 100%</li>
                             <li><strong>Xuất xứ:</strong> Việt Nam</li>
                             <li><strong>Bảo hành:</strong> 1 năm</li>

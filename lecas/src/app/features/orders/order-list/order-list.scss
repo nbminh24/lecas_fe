@@ -193,20 +193,76 @@
     justify-content: flex-end;
 }
 
-.order-detail-btn {
-    background: #222;
-    color: #fff;
-    border: none;
+.order-detail-btn,
+.review-btn,
+.reorder-btn {
+    background: #fff;
+    color: #232323;
+    border: 1.5px solid #e0e0e0;
     border-radius: 6px;
-    padding: 0.6em 1.5em;
-    font-size: 1rem;
+    padding: 0 8px;
+    height: 30px;
+    font-size: 13px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.18s, color 0.18s, border 0.18s, transform 0.18s;
     cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    outline: none;
 
-    &:hover {
-        background: #111;
+    i {
+        font-size: 1em;
+        color: #232323;
+        transition: color 0.18s;
+    }
+
+    &:hover,
+    &:focus {
+        background: #fff;
+        color: #111;
+        border: 1.5px solid #232323;
+        transform: translateY(-1px) scale(1.03);
+
+        i {
+            color: #111;
+        }
+    }
+}
+
+.chat-order-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    box-shadow: none;
+    padding: 0;
+    transition: background 0.18s, color 0.18s, border 0.18s, transform 0.18s;
+    margin-left: 0;
+    outline: none;
+
+    i {
+        color: #232323;
+        font-size: 1em;
+        transition: color 0.18s;
+    }
+
+    &:hover,
+    &:focus {
+        background: #fff;
+        border: 1.5px solid #232323;
+
+        i {
+            color: #111;
+        }
+
+        transform: translateY(-1px) scale(1.05);
     }
 }
 
@@ -419,8 +475,7 @@
     justify-content: flex-end;
 }
 
-.support-btn,
-.review-btn {
+.support-btn {
     background: #fff;
     color: #222;
     border: 1.5px solid #222;
@@ -435,8 +490,7 @@
     gap: 6px;
 }
 
-.support-btn:hover,
-.review-btn:hover {
+.support-btn:hover {
     background: #222;
     color: #fff;
 }
@@ -500,7 +554,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 10px;
+    gap: 6px;
+}
+
+.order-meta-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 4px;
 }
 
 .order-total {

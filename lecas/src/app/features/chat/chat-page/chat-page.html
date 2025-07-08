@@ -1,0 +1,33 @@
+<div class="chat-page">
+    <div class="chat-header">
+        <h2>Chat với LeCas</h2>
+    </div>
+    <div class="chat-messages">
+        <div *ngFor="let msg of messages" class="chat-message" [class.me]="msg.isMe">
+            <ng-container *ngIf="msg.type === 'order'; else textMsg">
+                <div class="order-chat-card">
+                    <div class="order-chat-header">
+                        <span class="order-chat-id">#{{ msg.order.id }}</span>
+                        <span class="order-chat-status">{{ msg.order.status | titlecase }}</span>
+                    </div>
+                    <div class="order-chat-info">
+                        <div>Ngày đặt: {{ msg.order.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                        <div>Tổng tiền: <b>{{ msg.order.total | number }}₫</b></div>
+                    </div>
+                    <!-- <button class="order-chat-detail-btn" (click)="openOrderDetail && openOrderDetail(msg.order)">Xem chi tiết</button> -->
+                </div>
+            </ng-container>
+            <ng-template #textMsg>
+                <div class="msg-content">{{ msg.content }}</div>
+            </ng-template>
+            <div class="msg-meta">
+                <span class="msg-from">{{ msg.isMe ? 'Tôi' : msg.from }}</span>
+                <span class="msg-time">{{ msg.time }}</span>
+            </div>
+        </div>
+    </div>
+    <form class="chat-input" (ngSubmit)="sendMessage()">
+        <input type="text" [(ngModel)]="newMessage" name="message" placeholder="Nhập tin nhắn..." autocomplete="off" />
+        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+    </form>
+</div>

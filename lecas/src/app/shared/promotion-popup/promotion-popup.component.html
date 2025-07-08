@@ -1,0 +1,28 @@
+<div class="popup-backdrop">
+    <div class="popup">
+        <h3>🎁 Nhận mã khuyến mãi</h3>
+        <div *ngIf="coupons.length > 0">
+            <button (click)="saveAll()" class="save-all-btn">Nhận tất cả</button>
+            <div class="coupon-list">
+                <div *ngFor="let c of coupons" class="coupon-card">
+                    <div class="coupon-header">
+                        <span class="coupon-code">{{c.code}}</span>
+                        <span class="coupon-discount">{{c.discount}}</span>
+                    </div>
+                    <div class="coupon-desc">{{c.description}}</div>
+                    <div class="coupon-meta">
+                        <span>HSD: {{c.expiredAt || c.expiry}}</span>
+                        <span>Còn lại: {{c.remaining ?? 100}}</span>
+                    </div>
+                    <button (click)="saveCoupon(c.code)" [disabled]="c.isClaimed" class="coupon-save-btn">
+                        {{ c.isClaimed ? 'Đã lưu' : 'Lưu mã' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="coupons.length === 0">
+            <p>Hiện không còn mã khuyến mãi nào để nhận.</p>
+        </div>
+        <button class="close-btn" (click)="close()">Đóng</button>
+    </div>
+</div>

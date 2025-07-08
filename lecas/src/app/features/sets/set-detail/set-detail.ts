@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../../core/services/cart';
+import { AddToCartRequest } from '../../../core/models/cart.interface';
 import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 
 interface SetIncludedProduct {
@@ -101,7 +103,11 @@ export class SetDetail implements OnInit {
         }
     ];
 
-    constructor(private route: ActivatedRoute, private router: Router) { }
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private cartService: CartService
+    ) { }
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
@@ -122,17 +128,46 @@ export class SetDetail implements OnInit {
 
     addToCart() {
         if (this.set) {
-            console.log('Adding set to cart:', this.set.name, 'with options:', this.selectedOptions);
-            alert(`Đã thêm set \'${this.set.name}\' vào giỏ hàng!`);
-            // Implement actual add to cart logic here
+            // For now, we'll add the first product in the set
+            // In a real implementation, you might want to add all products or create a special set product
+            const firstProduct = this.set.products[0];
+            const request: AddToCartRequest = {
+                productId: firstProduct.id.toString(),
+                quantity: 1
+            };
+
+            this.cartService.addToCart(request).subscribe({
+                next: () => {
+                    console.log('Added set to cart:', this.set!.name);
+                    alert(`Đã thêm set \'${this.set!.name}\' vào giỏ hàng!`);
+                },
+                error: (error) => {
+                    console.error('Error adding set to cart:', error);
+                    alert('Có lỗi xảy ra khi thêm vào giỏ hàng');
+                }
+            });
         }
     }
 
     buyNow() {
         if (this.set) {
-            console.log('Buying set now:', this.set.name, 'with options:', this.selectedOptions);
-            alert(`Chức năng mua ngay set \'${this.set.name}\'!`);
-            // Implement actual buy now logic here (e.g., navigate to checkout)
+            // For now, we'll add the first product in the set and navigate to checkout
+            const firstProduct = this.set.products[0];
+            const request: AddToCartRequest = {
+                productId: firstProduct.id.toString(),
+                quantity: 1
+            };
+
+            this.cartService.addToCart(request).subscribe({
+                next: () => {
+                    console.log('Buying set now:', this.set!.name);
+                    this.router.navigate(['/checkout']);
+                },
+                error: (error) => {
+                    console.error('Error adding set to cart:', error);
+                    alert('Có lỗi xảy ra khi thêm vào giỏ hàng');
+                }
+            });
         }
     }
 

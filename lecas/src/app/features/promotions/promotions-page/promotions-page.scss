@@ -187,7 +187,7 @@
 }
 
 .left-col {
-    flex: 1.1;
+    flex: 2;
     min-width: 0;
 }
 
@@ -196,7 +196,7 @@
     min-width: 0;
 }
 
-.hot-title {
+.flash-sale-title {
     font-size: 20px;
     font-weight: 700;
     color: #232323;
@@ -205,169 +205,159 @@
     letter-spacing: 0.5px;
 }
 
-.hot-product-list {
+.flash-sale-list {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-.hot-product-card {
-    display: flex;
+.flash-sale-card {
+    display: grid;
+    grid-template-columns: 80px 1fr 110px;
     align-items: center;
     background: #fff;
-    border: 1.5px solid #232323;
-    border-radius: 10px;
-    padding: 14px 18px;
-    gap: 16px;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.18s, border 0.18s;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(35, 35, 35, 0.08);
+    padding: 4px 14px;
+    gap: 6px;
+    border-left: 4px solid #232323;
+    transition: box-shadow 0.2s, border 0.2s;
+    position: relative;
+    min-height: 60px;
 }
 
-.hot-product-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
-    border: 1.5px solid #111;
-}
-
-.hot-thumb {
-    width: 64px;
-    height: 64px;
+.flash-sale-thumb {
+    width: 72px;
+    height: 72px;
     object-fit: cover;
     border-radius: 8px;
-    border: 1.5px solid #d1d1d1;
-    background: #fafafa;
+    background: #f5f5f5;
+    grid-row: 1 / span 3;
+    grid-column: 1;
+    align-self: flex-start;
 }
 
-.hot-info {
-    flex: 1;
+.flash-sale-info {
+    flex: unset;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: flex-start;
 }
 
-.hot-name {
-    font-weight: 700;
-    font-size: 16px;
-    color: #232323;
-}
-
-.hot-desc {
-    font-size: 13px;
-    color: #444;
-    margin-bottom: 2px;
-}
-
-.hot-prices {
+.flash-sale-info-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 2px;
 }
 
-.hot-sale-price {
-    font-size: 15px;
+.flash-sale-name {
+    font-size: 1rem;
     font-weight: 700;
     color: #232323;
 }
 
-.hot-price {
-    font-size: 14px;
-    color: #bdbdbd;
-    text-decoration: line-through;
-}
-
-.hot-discount {
-    font-size: 13px;
+.flash-sale-discount {
     color: #fff;
     background: #232323;
     border-radius: 4px;
-    padding: 2px 7px;
+    padding: 2px 8px;
+    font-size: 0.95rem;
     font-weight: 700;
-    margin-left: 2px;
+    margin-left: 0;
 }
 
-.hot-remaining-bar {
+.flash-sale-prices {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 2px;
+    margin-top: 0;
 }
 
-.hot-bar-bg {
-    width: 90px;
-    height: 8px;
-    background: #e5e5e5;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-}
-
-.hot-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #232323 60%, #444 100%);
-    border-radius: 4px;
-    transition: width 0.3s;
-}
-
-.hot-remaining-text {
-    font-size: 12px;
+.flash-sale-sale-price {
     color: #232323;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
-.hot-action-btns {
+.flash-sale-price {
+    color: #888;
+    font-size: 0.98rem;
+    text-decoration: line-through;
+}
+
+.flash-sale-desc {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.flash-sale-action-btns-inline {
     display: flex;
     flex-direction: column;
-    gap: 7px;
-    margin-top: 8px;
+    gap: 10px;
+    margin-top: 0;
+    width: 100px;
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    align-items: center;
+    justify-content: center;
 }
 
-.hot-add-cart-btn,
-.hot-buy-now-btn {
+.flash-sale-add-cart-btn,
+.flash-sale-buy-now-btn {
     width: 100%;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 9px 0;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    transition: background 0.18s, color 0.18s;
-}
-
-.hot-add-cart-btn {
-    background: #232323;
-    color: #fff;
-}
-
-.hot-add-cart-btn:hover {
-    background: #444;
-}
-
-.hot-buy-now-btn {
     background: #fff;
     color: #232323;
+    border: 1.5px solid #bdbdbd;
+    border-radius: 5px;
+    padding: 14px 0;
+    height: 41px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border 0.15s;
+    margin: 0;
+}
+
+.flash-sale-add-cart-btn:hover,
+.flash-sale-buy-now-btn:hover {
+    background: #232323;
+    color: #fff;
     border: 1.5px solid #232323;
 }
 
-.hot-buy-now-btn:hover {
-    background: #232323;
-    color: #fff;
-}
-
-.hot-action-btns-inline {
+.flash-sale-remaining-bar {
+    margin-top: 2px;
     display: flex;
-    flex-direction: column;
-    gap: 7px;
-    align-items: flex-end;
-    margin-left: 18px;
+    align-items: center;
+    gap: 8px;
+    grid-column: 1 / span 3;
 }
 
-.hot-add-cart-btn.small,
-.hot-buy-now-btn.small {
-    font-size: 13px;
-    padding: 6px 14px;
-    border-radius: 5px;
-    min-width: 90px;
+.flash-sale-bar-bg {
+    width: 100%;
+    max-width: 260px;
+    height: 6px;
+    background: #ededed;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-right: 12px;
+}
+
+.flash-sale-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #232323 60%, #888 100%);
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+.flash-sale-remaining-text {
+    font-size: 0.9rem;
+    color: #232323;
     font-weight: 600;
 }
 
@@ -382,12 +372,12 @@
         margin-bottom: 18px;
     }
 
-    .hot-product-card {
+    .flash-sale-card {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .hot-action-btns-inline {
+    .flash-sale-action-btns-inline {
         flex-direction: row;
         align-items: center;
         margin-left: 0;
@@ -395,4 +385,16 @@
         gap: 8px;
         justify-content: flex-start;
     }
+}
+
+.toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: #222;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 6px;
+    z-index: 2000;
+    font-size: 16px;
 }

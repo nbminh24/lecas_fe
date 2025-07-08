@@ -1,14 +1,12 @@
 export interface User {
     id: string;
     email: string;
-    firstName: string;
-    lastName: string;
+    name: string;
     phone?: string;
     dateOfBirth?: Date;
-    gender?: 'male' | 'female' | 'other';
+    role: 'user' | 'admin';
     addresses: Address[];
     defaultAddressId?: string;
-    preferences: UserPreferences;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -16,23 +14,55 @@ export interface User {
 export interface Address {
     id: string;
     type: 'home' | 'work' | 'other';
-    firstName: string;
-    lastName: string;
-    company?: string;
-    addressLine1: string;
-    addressLine2?: string;
+    address: string;
     city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-    phone: string;
+    district: string;
+    ward: string;
     isDefault: boolean;
 }
 
-export interface UserPreferences {
-    newsletter: boolean;
-    marketingEmails: boolean;
-    sizePreferences: string[];
-    colorPreferences: string[];
-    categoryPreferences: string[];
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    accessToken: string;
+    refreshToken: string;
+    expiresAt: string;
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+    };
+    isNewUser: boolean;
+}
+
+export interface GoogleLoginRequest {
+    accessToken: string;
+}
+
+export interface RefreshTokenRequest {
+    refreshToken: string;
+}
+
+export interface UpdateProfileRequest {
+    name?: string;
+    phone?: string;
+    dateOfBirth?: string;
+}
+
+export interface ChangePasswordRequest {
+    currentPassword: string;
+    newPassword: string;
+}
+
+export interface AddAddressRequest {
+    type: 'home' | 'work' | 'other';
+    address: string;
+    city: string;
+    district: string;
+    ward: string;
+    isDefault: boolean;
 } 

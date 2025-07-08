@@ -22,8 +22,8 @@
             <a [routerLink]="['/products', product.id]">{{ product.name }}</a>
         </h3>
 
-        <div class="product-category">
-            {{ product.subCategory }}
+        <div class="product-category" *ngIf="product.category">
+            {{ product.category.name }}
         </div>
 
         <!-- Rating -->
@@ -46,27 +46,6 @@
         <!-- Quick Add Section -->
         <div class="quick-add-section" *ngIf="showQuickAdd">
             <div class="quick-add-options">
-                <!-- Size Selection -->
-                <div class="option-group" *ngIf="product.sizes.length > 1">
-                    <label>Kích thước:</label>
-                    <div class="size-options">
-                        <button *ngFor="let size of product.sizes" (click)="selectedSize = size" class="size-option"
-                            [class.selected]="selectedSize === size">
-                            {{ size }}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Color Selection -->
-                <div class="option-group" *ngIf="product.colors.length > 1">
-                    <label>Màu sắc:</label>
-                    <div class="color-options">
-                        <button *ngFor="let color of product.colors" (click)="selectedColor = color.name"
-                            class="color-option" [class.selected]="selectedColor === color.name"
-                            [style.background-color]="color.code" [title]="color.name"></button>
-                    </div>
-                </div>
-
                 <!-- Quantity -->
                 <div class="option-group">
                     <label>Số lượng:</label>
@@ -79,10 +58,10 @@
             </div>
 
             <div class="action-buttons">
-                <button (click)="addToCart()" class="add-to-cart-btn" [disabled]="!selectedSize || !selectedColor">
+                <button (click)="addToCart()" class="add-to-cart-btn">
                     Thêm vào giỏ
                 </button>
-                <button (click)="buyNow()" class="buy-now-btn" [disabled]="!selectedSize || !selectedColor">
+                <button (click)="buyNow()" class="buy-now-btn">
                     Mua ngay
                 </button>
             </div>

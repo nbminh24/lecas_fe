@@ -40,16 +40,8 @@
                     <!-- Product Info -->
                     <div class="item-details">
                         <h3 class="item-name">{{ item.product.name }}</h3>
-                        <div class="item-category">{{ item.product.subCategory }}</div>
-                        <div class="item-options">
-                            <span class="option"><strong>Kích thước:</strong> {{ item.selectedSize }}</span>
-                            <span class="option"><strong>Màu:</strong> {{ item.selectedColor }}</span>
-                        </div>
                         <div class="item-price">
                             {{ formatPrice(item.price) }}
-                            <span class="original-price" *ngIf="item.product.originalPrice">
-                                {{ formatPrice(item.product.originalPrice) }}
-                            </span>
                         </div>
                     </div>
 

@@ -55,7 +55,7 @@ export class ProductList implements OnInit {
     this.isLoading = true;
     this.productService.getProducts().subscribe({
       next: (products) => {
-        this.products = products.filter(p => p.category !== ProductCategory.ACCESSORIES);
+        this.products = products.filter(p => p.category?.id !== ProductCategory.ACCESSORIES);
         this.applyFilters();
         this.isLoading = false;
       },
@@ -87,13 +87,13 @@ export class ProductList implements OnInit {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(search) ||
         product.description.toLowerCase().includes(search) ||
-        product.subCategory.toLowerCase().includes(search)
+        product.category?.name.toLowerCase().includes(search)
       );
     }
 
     // Apply category filter
     if (this.selectedCategory) {
-      filtered = filtered.filter(product => product.category === this.selectedCategory);
+      filtered = filtered.filter(product => product.category?.id === this.selectedCategory);
     }
 
     // Apply sorting

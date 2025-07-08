@@ -2,16 +2,15 @@ import { Product } from './product.interface';
 
 export interface CartItem {
     id: string;
-    product: Product;
+    productId: string;
+    product: CartProduct;
     quantity: number;
-    selectedSize: string;
-    selectedColor: string;
     price: number;
 }
 
 export interface Cart {
     id: string;
-    userId?: string;
+    userId: string;
     items: CartItem[];
     totalItems: number;
     subtotal: number;
@@ -28,4 +27,20 @@ export interface CartSummary {
     shipping: number;
     tax: number;
     total: number;
+}
+
+export interface AddToCartRequest {
+    productId: string;
+    quantity: number;
+}
+
+export interface UpdateCartItemRequest {
+    quantity: number;
+}
+
+export interface CartProduct {
+    id: string;
+    name: string;
+    price: number;
+    images: string[];
 } 

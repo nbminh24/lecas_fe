@@ -13,4 +13,10 @@ import { CartService } from '../../core/services/cart';
 export class Header {
   private cartService = inject(CartService);
   cartItemCount$ = this.cartService.getCartItemCount();
+  isLoggedIn = true; // mock trạng thái đăng nhập
+  user = {
+    name: 'Nguyễn Văn A',
+    avatar: '/assets/avatar-default.png',
+    email: 'user@email.com'
+  };
 }

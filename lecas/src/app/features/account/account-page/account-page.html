@@ -1,0 +1,48 @@
+<div class="account-page">
+    <aside class="account-sidebar">
+        <div class="account-avatar">
+            <img [src]="user.avatar" alt="avatar" />
+            <div class="account-name">{{ user.name }}</div>
+            <div class="account-email">{{ user.email }}</div>
+        </div>
+        <nav class="account-menu">
+            <button *ngFor="let m of menu" (click)="selectMenu(m.key)" [class.active]="selected === m.key">
+                <i [class]="m.icon"></i> {{ m.label }}
+            </button>
+        </nav>
+    </aside>
+    <main class="account-content">
+        <div *ngIf="selected === 'profile'">
+            <h2>Thông tin cá nhân</h2>
+            <div class="profile-info">
+                <img [src]="user.avatar" alt="avatar" class="profile-avatar" />
+                <div class="profile-fields">
+                    <div><b>Họ tên:</b> {{ user.name }}</div>
+                    <div><b>Email:</b> {{ user.email }}</div>
+                    <div><b>SĐT:</b> {{ user.phone }}</div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selected === 'password'">
+            <h2>Đổi mật khẩu</h2>
+            <form class="password-form">
+                <input type="password" placeholder="Mật khẩu cũ" />
+                <input type="password" placeholder="Mật khẩu mới" />
+                <input type="password" placeholder="Xác nhận mật khẩu mới" />
+                <button type="submit">Đổi mật khẩu</button>
+            </form>
+        </div>
+        <div *ngIf="selected === 'orders'">
+            <h2>Đơn hàng của tôi</h2>
+            <p>(Tích hợp order-list sau)</p>
+        </div>
+        <div *ngIf="selected === 'address'">
+            <h2>Địa chỉ giao hàng</h2>
+            <p>(Tích hợp quản lý địa chỉ sau)</p>
+        </div>
+        <div *ngIf="selected === 'voucher'">
+            <h2>Voucher đã lưu</h2>
+            <p>(Tích hợp danh sách voucher sau)</p>
+        </div>
+    </main>
+</div>

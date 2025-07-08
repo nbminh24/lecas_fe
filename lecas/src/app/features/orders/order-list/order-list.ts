@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
+import { OrderChatService } from '../../../core/services/order-chat.service';
+import { Router } from '@angular/router';
 
 interface OrderProduct {
   id: number;
@@ -134,6 +136,8 @@ export class OrderList {
     }
   ];
 
+  constructor(private orderChatService: OrderChatService, private router: Router) { }
+
   get filteredOrders() {
     let filtered = this.orders;
     if (this.selectedTab !== 'all') {
@@ -220,5 +224,15 @@ export class OrderList {
 
   onPageChange(page: number) {
     this.currentPage = page;
+  }
+
+  sendOrderToChat(order: Order) {
+    this.orderChatService.setOrder(order);
+    this.router.navigate(['/chat']);
+  }
+
+  muaLai(order: Order) {
+    // Giả lập thêm lại toàn bộ sản phẩm vào giỏ hàng
+    alert('Đã thêm lại các sản phẩm của đơn #' + order.id + ' vào giỏ hàng!');
   }
 }

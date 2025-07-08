@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../core/services/product';
 import { CartService } from '../../../core/services/cart';
 import { Product } from '../../../core/models/product.interface';
+import { AddToCartRequest } from '../../../core/models/cart.interface';
 import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 
 @Component({
@@ -17,8 +18,6 @@ import { ShopServiceFeaturesComponent } from '../../../shared/product-features/s
 export class ProductDetail implements OnInit {
   product: Product | null = null;
   selectedImageIndex = 0;
-  selectedSize = '';
-  selectedColor = '';
   quantity = 1;
   isLoading = true;
   error = '';
@@ -42,19 +41,9 @@ export class ProductDetail implements OnInit {
 
   loadProduct(productId: string): void {
     this.isLoading = true;
-    this.productService.getProductById(productId).subscribe({
+    this.productService.getProduct(productId).subscribe({
       next: (product) => {
-        if (product) {
-          this.product = product;
-          if (product.sizes.length > 0) {
-            this.selectedSize = product.sizes[0];
-          }
-          if (product.colors.length > 0) {
-            this.selectedColor = product.colors[0].name;
-          }
-        } else {
-          this.error = 'Sản phẩm không tồn tại';
-        }
+        this.product = product;
         this.isLoading = false;
       },
       error: (error) => {
@@ -68,14 +57,6 @@ export class ProductDetail implements OnInit {
     this.selectedImageIndex = index;
   }
 
-  selectSize(size: string): void {
-    this.selectedSize = size;
-  }
-
-  selectColor(color: string): void {
-    this.selectedColor = color;
-  }
-
   increaseQuantity(): void {
     this.quantity++;
   }
@@ -87,21 +68,44 @@ export class ProductDetail implements OnInit {
   }
 
   addToCart(): void {
-    if (!this.product || !this.selectedSize || !this.selectedColor) {
+    if (!this.product) {
       return;
     }
 
-    this.cartService.addToCart(this.product, this.quantity, this.selectedSize, this.selectedColor);
-    // Show success message or navigate to cart
+    const request: AddToCartRequest = {
+      productId: this.product.id,
+      quantity: this.quantity
+    };
+
+    this.cartService.addToCart(request).subscribe({
+      next: () => {
+        // Show success message
+        console.log('Added to cart successfully');
+      },
+      error: (error) => {
+        console.error('Error adding to cart:', error);
+      }
+    });
   }
 
   buyNow(): void {
-    if (!this.product || !this.selectedSize || !this.selectedColor) {
+    if (!this.product) {
       return;
     }
 
-    this.cartService.addToCart(this.product, this.quantity, this.selectedSize, this.selectedColor);
-    this.router.navigate(['/checkout']);
+    const request: AddToCartRequest = {
+      productId: this.product.id,
+      quantity: this.quantity
+    };
+
+    this.cartService.addToCart(request).subscribe({
+      next: () => {
+        this.router.navigate(['/checkout']);
+      },
+      error: (error) => {
+        console.error('Error adding to cart:', error);
+      }
+    });
   }
 
   formatPrice(price: number): string {
@@ -124,14 +128,6 @@ export class ProductDetail implements OnInit {
       case 'ACCESSORIES': return 'Phụ Kiện';
       default: return category;
     }
-  }
-
-  isSizeAvailable(size: string): boolean {
-    return this.product?.sizes.includes(size) || false;
-  }
-
-  isColorAvailable(color: string): boolean {
-    return this.product?.colors.some(c => c.name === color) || false;
   }
 
   goBack(): void {

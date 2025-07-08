@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
+import { PromotionPopupComponent } from '../../../shared/promotion-popup/promotion-popup.component';
 
 interface PromotionBanner {
     image: string;
     alt: string;
 }
 
-interface Coupon {
+export interface Coupon {
     code: string;
     description: string;
     discount: string;
@@ -31,11 +32,11 @@ interface HotProduct {
 @Component({
     selector: 'app-promotions-page',
     standalone: true,
-    imports: [CommonModule, PaginationComponent],
+    imports: [CommonModule, PaginationComponent, PromotionPopupComponent],
     templateUrl: './promotions-page.html',
     styleUrl: './promotions-page.scss'
 })
-export class PromotionsPageComponent {
+export class PromotionsPageComponent implements OnInit {
     banners: PromotionBanner[] = [
         { image: '/assets/promo/banner1.jpg', alt: 'Ưu đãi Hè 2024' },
         { image: '/assets/promo/banner2.jpg', alt: 'Sale Đặc Biệt' }
@@ -123,10 +124,34 @@ export class PromotionsPageComponent {
         this.currentHotPage = page;
     }
 
+    toastMsg = '';
+    showPopup = false;
+
+    get availableCoupons() {
+        return this.coupons.filter(c => !c.isClaimed && (c.remaining ?? 1) > 0);
+    }
+
+    ngOnInit() {
+        // Hiện popup nếu còn mã chưa nhận
+        if (this.coupons.some(c => !c.isClaimed && (c.remaining ?? 1) > 0)) {
+            this.showPopup = true;
+        }
+    }
+
+    onPopupClosed() {
+        this.showPopup = false;
+    }
+
+    onCouponSaved(count: number) {
+        this.toastMsg = `Bạn đã nhận thành công ${count} mã khuyến mãi!`;
+        setTimeout(() => this.toastMsg = '', 3000);
+    }
+
     claimCoupon(coupon: Coupon) {
         if (!coupon.isClaimed) {
             coupon.isClaimed = true;
-            alert('Đã lưu mã ' + coupon.code + ' vào ví voucher!');
+            this.toastMsg = 'Đã lưu mã ' + coupon.code + ' vào ví voucher!';
+            setTimeout(() => this.toastMsg = '', 2000);
         }
     }
 
@@ -139,9 +164,11 @@ export class PromotionsPageComponent {
             }
         }
         if (count > 0) {
-            alert('Đã nhận ' + count + ' mã khuyến mãi!');
+            this.toastMsg = 'Đã nhận ' + count + ' mã khuyến mãi!';
+            setTimeout(() => this.toastMsg = '', 2000);
         } else {
-            alert('Bạn đã nhận hết các mã hoặc không còn lượt!');
+            this.toastMsg = 'Bạn đã nhận hết các mã hoặc không còn lượt!';
+            setTimeout(() => this.toastMsg = '', 2000);
         }
     }
 } 

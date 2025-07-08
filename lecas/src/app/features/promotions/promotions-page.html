@@ -1,0 +1,8 @@
+<div class="flash-sale-list monochrome">
+    <div class="flash-sale-card monochrome" *ngFor="let p of pagedHotProducts">
+    </div>
+</div>
+<app-promotion-popup *ngIf="showPopup" [coupons]="availableCoupons" (closed)="onPopupClosed()"
+    (saved)="onCouponSaved($event)">
+</app-promotion-popup>
+<div class="toast" *ngIf="toastMsg">{{toastMsg}}</div>

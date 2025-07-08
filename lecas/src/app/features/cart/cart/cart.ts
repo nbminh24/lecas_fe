@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart';
-import { CartItem } from '../../../core/models/cart.interface';
+import { CartItem, UpdateCartItemRequest } from '../../../core/models/cart.interface';
 import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 
@@ -28,7 +28,11 @@ export class Cart implements OnInit {
 
   loadCart(): void {
     this.cartService.cart$.subscribe(cart => {
-      this.cartItems = cart.items;
+      if (cart) {
+        this.cartItems = cart.items;
+      } else {
+        this.cartItems = [];
+      }
       this.isLoading = false;
     });
   }
@@ -37,16 +41,31 @@ export class Cart implements OnInit {
     if (newQuantity <= 0) {
       this.removeItem(item);
     } else {
-      this.cartService.updateItemQuantity(item.id, newQuantity);
+      const request: UpdateCartItemRequest = {
+        quantity: newQuantity
+      };
+      this.cartService.updateItemQuantity(item.id, request).subscribe({
+        error: (error) => {
+          console.error('Error updating quantity:', error);
+        }
+      });
     }
   }
 
   removeItem(item: CartItem): void {
-    this.cartService.removeFromCart(item.id);
+    this.cartService.removeFromCart(item.id).subscribe({
+      error: (error) => {
+        console.error('Error removing item:', error);
+      }
+    });
   }
 
   clearCart(): void {
-    this.cartService.clearCart();
+    this.cartService.clearCart().subscribe({
+      error: (error) => {
+        console.error('Error clearing cart:', error);
+      }
+    });
   }
 
   getSubtotal(): number {

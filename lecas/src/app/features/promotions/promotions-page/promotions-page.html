@@ -6,57 +6,38 @@
     </div>
     <div class="split-content">
         <div class="left-col">
-            <h2 class="hot-title">Sản phẩm hot</h2>
-            <div class="hot-product-list">
-                <div class="hot-product-card" *ngFor="let p of pagedHotProducts">
-                    <img [src]="p.image" [alt]="p.name" class="hot-thumb" />
-                    <div class="hot-info">
-                        <div class="hot-name">{{ p.name }}</div>
-                        <div class="hot-desc">{{ p.desc }}</div>
-                        <div class="hot-prices">
-                            <span class="hot-sale-price">{{ p.salePrice | number }}₫</span>
-                            <span class="hot-price">{{ p.price | number }}₫</span>
-                            <span class="hot-discount">-{{ p.discountPercent }}%</span>
+            <h2 class="flash-sale-title">Flash Sale</h2>
+            <div class="flash-sale-list">
+                <div class="flash-sale-card" *ngFor="let p of pagedHotProducts">
+                    <img [src]="p.image" [alt]="p.name" class="flash-sale-thumb" />
+                    <div class="flash-sale-info">
+                        <div class="flash-sale-info-row">
+                            <div class="flash-sale-name">{{ p.name }}</div>
+                            <span class="flash-sale-discount">-{{ p.discountPercent }}%</span>
                         </div>
-                        <div class="hot-remaining-bar">
-                            <div class="hot-bar-bg">
-                                <div class="hot-bar-fill" [style.width]="(p.remaining/p.total*100)+'%'"></div>
-                            </div>
-                            <span class="hot-remaining-text">Còn lại: {{ p.remaining }}/{{ p.total }}</span>
+                        <div class="flash-sale-prices">
+                            <span class="flash-sale-sale-price">{{ p.salePrice | number }}₫</span>
+                            <span class="flash-sale-price">{{ p.price | number }}₫</span>
                         </div>
+                        <div class="flash-sale-desc">{{ p.desc }}</div>
                     </div>
-                    <div class="hot-action-btns-inline">
-                        <button class="hot-add-cart-btn small">Thêm vào giỏ</button>
-                        <button class="hot-buy-now-btn small">Mua ngay</button>
+                    <div class="flash-sale-action-btns-inline">
+                        <button class="flash-sale-add-cart-btn small">Thêm vào giỏ</button>
+                        <button class="flash-sale-buy-now-btn small">Mua ngay</button>
+                    </div>
+                    <div class="flash-sale-remaining-bar">
+                        <div class="flash-sale-bar-bg">
+                            <div class="flash-sale-bar-fill" [style.width]="(p.remaining/p.total*100)+'%'"></div>
+                        </div>
+                        <span class="flash-sale-remaining-text">Còn lại: {{ p.remaining }}/{{ p.total }}</span>
                     </div>
                 </div>
             </div>
             <app-pagination [totalItems]="hotProducts.length" [pageSize]="pageSizeHot" [currentPage]="currentHotPage"
                 (pageChange)="onHotPageChange($event)"></app-pagination>
         </div>
-        <div class="right-col">
-            <h2 class="promo-title">Săn mã khuyến mãi</h2>
-            <button class="claim-all-btn" (click)="claimAllCoupons()">Nhận tất cả</button>
-            <div class="coupon-list-vertical">
-                <div class="coupon-list-item" *ngFor="let c of pagedCoupons">
-                    <div class="coupon-list-info">
-                        <div class="coupon-list-code">{{ c.code }}</div>
-                        <div class="coupon-list-desc">{{ c.description }}</div>
-                        <div class="coupon-list-meta">
-                            <span class="coupon-list-discount">{{ c.discount }}</span>
-                            <span class="coupon-list-program">{{ c.program }}</span>
-                            <span class="coupon-list-expiry">HSD: {{ c.expiredAt }}</span>
-                            <span class="coupon-list-remaining">Còn lại: {{ c.remaining ?? 100 }}</span>
-                        </div>
-                    </div>
-                    <button class="claim-btn" [class.claimed]="c.isClaimed" (click)="claimCoupon(c)"
-                        [disabled]="c.isClaimed">
-                        {{ c.isClaimed ? 'Đã lưu' : 'Lưu mã' }}
-                    </button>
-                </div>
-            </div>
-            <app-pagination [totalItems]="coupons.length" [pageSize]="pageSizeCoupon" [currentPage]="currentCouponPage"
-                (pageChange)="onCouponPageChange($event)"></app-pagination>
-        </div>
     </div>
 </div>
+<app-promotion-popup *ngIf="showPopup" (closed)="onPopupClosed()" (saved)="onCouponSaved($event)"
+    [coupons]="availableCoupons"></app-promotion-popup>
+<div class="toast" *ngIf="toastMsg">{{toastMsg}}</div>

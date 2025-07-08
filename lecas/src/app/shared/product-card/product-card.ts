@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { Product } from '../../core/models/product.interface';
 import { CartService } from '../../core/services/cart';
+import { AddToCartRequest } from '../../core/models/cart.interface';
 
 @Component({
   selector: 'app-product-card',
@@ -13,8 +14,6 @@ import { CartService } from '../../core/services/cart';
 })
 export class ProductCard {
   @Input() product!: Product;
-  selectedSize = '';
-  selectedColor = '';
   quantity = 1;
   showQuickAdd = false;
   Math = Math;
@@ -22,19 +21,25 @@ export class ProductCard {
   constructor(private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
-    if (this.product.sizes.length > 0) {
-      this.selectedSize = this.product.sizes[0];
-    }
-    if (this.product.colors.length > 0) {
-      this.selectedColor = this.product.colors[0].name;
-    }
+    // Initialize with default values if needed
   }
 
   addToCart(): void {
-    if (this.selectedSize && this.selectedColor) {
-      this.cartService.addToCart(this.product, this.quantity, this.selectedSize, this.selectedColor);
-      this.showQuickAdd = false;
-    }
+    const request: AddToCartRequest = {
+      productId: this.product.id,
+      quantity: this.quantity
+    };
+
+    this.cartService.addToCart(request).subscribe({
+      next: () => {
+        this.showQuickAdd = false;
+        // You can add a success message here
+      },
+      error: (error) => {
+        console.error('Error adding to cart:', error);
+        // You can add an error message here
+      }
+    });
   }
 
   decreaseQuantity(): void {
@@ -66,9 +71,19 @@ export class ProductCard {
   }
 
   buyNow(): void {
-    if (this.selectedSize && this.selectedColor) {
-      this.cartService.addToCart(this.product, this.quantity, this.selectedSize, this.selectedColor);
-      this.router.navigate(['/checkout']);
-    }
+    const request: AddToCartRequest = {
+      productId: this.product.id,
+      quantity: this.quantity
+    };
+
+    this.cartService.addToCart(request).subscribe({
+      next: () => {
+        this.router.navigate(['/checkout']);
+      },
+      error: (error) => {
+        console.error('Error adding to cart:', error);
+        // You can add an error message here
+      }
+    });
   }
 }

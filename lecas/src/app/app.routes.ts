@@ -42,6 +42,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/promotions/promotions-page/promotions-page').then(m => m.PromotionsPageComponent)
     },
     {
+        path: 'account',
+        loadComponent: () => import('./features/account/account-page/account-page').then(m => m.AccountPageComponent)
+    },
+    {
+        path: 'chat',
+        loadComponent: () => import('./features/chat/chat-page/chat-page').then(m => m.ChatPageComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }

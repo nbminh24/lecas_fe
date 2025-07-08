@@ -83,7 +83,7 @@ export class Home implements OnInit {
 
         // Best sellers (mock data - could be based on sales)
         this.bestSellers = products
-          .filter(p => p.category === ProductCategory.TOPS || p.category === ProductCategory.BOTTOMS)
+          .filter(p => p.category?.id === 'TOPS' || p.category?.id === 'BOTTOMS')
           .slice(0, 8);
 
         this.isLoading = false;
