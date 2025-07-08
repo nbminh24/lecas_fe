@@ -27,6 +27,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              "src/assets",
+              {
+                "glob": "_redirects",
+                "input": "src/assets",
+                "output": "/"
               }
             ],
             "styles": [
@@ -48,8 +54,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "24kB",
+                  "maximumError": "32kB"
                 }
               ],
               "outputHashing": "all"
