@@ -46,6 +46,22 @@
         <!-- Quick Add Section -->
         <div class="quick-add-section" *ngIf="showQuickAdd">
             <div class="quick-add-options">
+                <!-- Size -->
+                <div class="option-group" *ngIf="availableSizes.length > 0">
+                    <label>Size:</label>
+                    <select [(ngModel)]="selectedSize">
+                        <option value="" disabled selected>Chọn size</option>
+                        <option *ngFor="let s of availableSizes" [value]="s">{{ s }}</option>
+                    </select>
+                </div>
+                <!-- Color -->
+                <div class="option-group" *ngIf="availableColors.length > 0">
+                    <label>Màu sắc:</label>
+                    <select [(ngModel)]="selectedColor">
+                        <option value="" disabled selected>Chọn màu</option>
+                        <option *ngFor="let c of availableColors" [value]="c">{{ c }}</option>
+                    </select>
+                </div>
                 <!-- Quantity -->
                 <div class="option-group">
                     <label>Số lượng:</label>
@@ -56,15 +72,17 @@
                     </div>
                 </div>
             </div>
-
             <div class="action-buttons">
-                <button (click)="addToCart()" class="add-to-cart-btn">
+                <button (click)="addToCart()" class="add-to-cart-btn"
+                    [disabled]="(availableSizes.length > 0 && !selectedSize) || (availableColors.length > 0 && !selectedColor)">
                     Thêm vào giỏ
                 </button>
-                <button (click)="buyNow()" class="buy-now-btn">
+                <button (click)="buyNow()" class="buy-now-btn"
+                    [disabled]="(availableSizes.length > 0 && !selectedSize) || (availableColors.length > 0 && !selectedColor)">
                     Mua ngay
                 </button>
             </div>
+            <div *ngIf="addCartSuccess" class="add-cart-success">Đã thêm vào giỏ!</div>
         </div>
 
         <!-- Add to Cart Button -->
@@ -78,3 +96,18 @@
         </div>
     </div>
 </div>
+
+<ng-container *ngIf="!skeleton; else skeletonBlock">
+    <!-- Card sản phẩm thật -->
+    <!-- ... existing code ... -->
+</ng-container>
+<ng-template #skeletonBlock>
+    <div class="product-card skeleton">
+        <div class="image-skeleton"></div>
+        <div class="info-skeleton">
+            <div class="line-skeleton short"></div>
+            <div class="line-skeleton"></div>
+            <div class="line-skeleton"></div>
+        </div>
+    </div>
+</ng-template>

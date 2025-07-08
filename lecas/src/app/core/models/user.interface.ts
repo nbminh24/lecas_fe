@@ -1,14 +1,21 @@
 export interface User {
     id: string;
     email: string;
-    name: string;
+    name?: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
     phone?: string;
+    phoneNumber?: string;
+    avatar?: string;
+    isEmailVerified?: boolean;
+    roles?: string[];
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    addresses?: Address[];
+    defaultAddressId?: string;
     dateOfBirth?: Date;
     role: 'user' | 'admin';
-    addresses: Address[];
-    defaultAddressId?: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 export interface Address {
@@ -40,7 +47,7 @@ export interface LoginResponse {
 }
 
 export interface GoogleLoginRequest {
-    accessToken: string;
+    idToken: string;
 }
 
 export interface RefreshTokenRequest {

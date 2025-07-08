@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart';
 import { CartItem, UpdateCartItemRequest } from '../../../core/models/cart.interface';
 import { ShopServiceFeaturesComponent } from '../../../shared/product-features/shop-service-features.component';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
+import { ToastService } from '../../../app';
 
 @Component({
   selector: 'app-cart',
@@ -20,7 +21,7 @@ export class Cart implements OnInit {
   currentPage = 1;
   pageSize = 20;
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private router: Router, private toast: ToastService) { }
 
   ngOnInit(): void {
     this.loadCart();
@@ -124,5 +125,16 @@ export class Cart implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
+  }
+
+  goToCheckout(): void {
+    if (this.isCartEmpty()) {
+      this.toast.show('Giỏ hàng trống!', 'error');
+      return;
+    }
+    this.cartService["loadCart"]();
+    setTimeout(() => {
+      this.router.navigate(['/checkout']);
+    }, 200);
   }
 }

@@ -32,6 +32,8 @@ export interface CartSummary {
 export interface AddToCartRequest {
     productId: string;
     quantity: number;
+    size?: string;
+    color?: string;
 }
 
 export interface UpdateCartItemRequest {

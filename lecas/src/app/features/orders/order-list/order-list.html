@@ -64,11 +64,24 @@
                     <div><b>Tổng tiền:</b> <span class="order-total">{{ showDetail?.total | number }}₫</span></div>
                 </div>
                 <div class="shipping-info">
-                    <div><b>Người nhận:</b> {{ showDetail?.shippingInfo?.name }}</div>
-                    <div><b>SĐT:</b> {{ showDetail?.shippingInfo?.phone }}</div>
-                    <div><b>Địa chỉ:</b> {{ showDetail?.shippingInfo?.address }}</div>
-                    <div *ngIf="showDetail?.shippingInfo?.note"><b>Ghi chú:</b> {{ showDetail?.shippingInfo?.note }}
+                    <div *ngIf="!editShippingInfo">
+                        <div><b>Người nhận:</b> {{ showDetail?.shippingInfo?.name }}</div>
+                        <div><b>SĐT:</b> {{ showDetail?.shippingInfo?.phone }}</div>
+                        <div><b>Địa chỉ:</b> {{ showDetail?.shippingInfo?.address }}</div>
+                        <div *ngIf="showDetail?.shippingInfo?.note"><b>Ghi chú:</b> {{ showDetail?.shippingInfo?.note }}
+                        </div>
+                        <button *ngIf="showDetail?.status === 'processing'" class="edit-btn"
+                            (click)="startEditShippingInfo()"><i class="fas fa-edit"></i> Chỉnh sửa</button>
                     </div>
+                    <form *ngIf="editShippingInfo" (ngSubmit)="saveShippingInfo()">
+                        <div><b>Người nhận:</b> <input [(ngModel)]="shippingInfoForm.name" name="name" required /></div>
+                        <div><b>SĐT:</b> <input [(ngModel)]="shippingInfoForm.phone" name="phone" required /></div>
+                        <div><b>Địa chỉ:</b> <input [(ngModel)]="shippingInfoForm.address" name="address" required />
+                        </div>
+                        <div><b>Ghi chú:</b> <input [(ngModel)]="shippingInfoForm.note" name="note" /></div>
+                        <button type="submit" class="save-btn"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="button" class="cancel-btn" (click)="cancelEditShippingInfo()">Hủy</button>
+                    </form>
                 </div>
             </div>
             <div class="order-products">
@@ -85,14 +98,14 @@
                     </div>
                 </div>
             </div>
-            <div class="order-tracking">
+            <div class="order-tracking" *ngIf="showDetail?.tracking && showDetail.tracking.length">
                 <h3>Quá trình vận chuyển</h3>
                 <div class="tracking-timeline">
                     <div *ngFor="let t of showDetail?.tracking; let last = last" class="tracking-step"
-                        [class.active]="last || t.status === 'Đã giao thành công'">
+                        [class.active]="last || t.status === 'delivered'">
                         <div class="step-dot"></div>
                         <div class="step-info">
-                            <div class="step-status">{{ t.status }}</div>
+                            <div class="step-status">{{ getStatusLabel(t.status) }}</div>
                             <div class="step-location">{{ t.location }}</div>
                             <div class="step-time">{{ t.time }}</div>
                         </div>
@@ -104,6 +117,20 @@
                     hỗ trợ</button>
                 <button *ngIf="showDetail?.canReview" class="review-btn" (click)="reviewOrder(showDetail)"><i
                         class="fas fa-star"></i> Đánh giá</button>
+                <button *ngIf="showDetail?.status === 'processing'" class="cancel-btn"
+                    (click)="cancelOrder(showDetail)"><i class="fas fa-times-circle"></i> Hủy đơn</button>
+                <div *ngIf="isAdmin && showDetail && showDetail.status !== 'delivered' && showDetail.status !== 'cancelled'"
+                    class="admin-status-actions">
+                    <label>Chuyển trạng thái:</label>
+                    <select #statusSel [value]="showDetail.status">
+                        <option value="processing">Chờ xác nhận</option>
+                        <option value="shipping">Đang giao</option>
+                        <option value="delivered">Đã giao</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                    <button (click)="updateOrderStatus(showDetail, statusSel.value)"><i class="fas fa-sync"></i> Cập
+                        nhật</button>
+                </div>
             </div>
         </div>
         <div class="order-detail-backdrop" (click)="closeDetail()"></div>

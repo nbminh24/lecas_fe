@@ -8,7 +8,9 @@
 
         <!-- Loading State -->
         <div class="loading-state" *ngIf="isLoading">
-            <div class="loading-spinner"></div>
+            <div class="products-grid">
+                <app-product-card *ngFor="let s of [1,2,3,4,5,6,7,8]" [skeleton]="true"></app-product-card>
+            </div>
             <p>Đang tải sản phẩm...</p>
         </div>
 
@@ -47,9 +49,9 @@
                 <div class="filter-section">
                     <h4>Danh Mục</h4>
                     <div class="filter-options">
-                        <button *ngFor="let category of categories"
-                            (click)="selectedCategory = category.value; onCategoryChange()" class="filter-option"
-                            [class.active]="selectedCategory === category.value">
+                        <button *ngFor="let category of categories" (click)="onCategoryChange(category.value)"
+                            class="filter-option"
+                            [class.active]="category.value === '' ? isAllCategoriesSelected() : selectedCategories.includes(category.value)">
                             {{ category.label }}
                         </button>
                     </div>
@@ -74,11 +76,12 @@
                 <app-pagination [totalItems]="filteredProducts.length" [pageSize]="pageSize" [currentPage]="currentPage"
                     (pageChange)="onPageChange($event)"></app-pagination>
 
-                <div class="no-results" *ngIf="filteredProducts.length === 0">
-                    <i class="fas fa-search"></i>
-                    <h3>Không tìm thấy sản phẩm</h3>
-                    <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
-                    <button (click)="clearFilters()" class="btn btn-primary">
+                <div class="no-results" *ngIf="!isLoading && filteredProducts.length === 0">
+                    <i class="fas fa-box-open" style="font-size:48px;color:#bbb;"></i>
+                    <h3>Chưa có sản phẩm nào!</h3>
+                    <p>Hãy quay lại sau hoặc thử tìm kiếm/bộ lọc khác.</p>
+                    <button *ngIf="searchTerm || selectedCategories.length > 0" (click)="clearFilters()"
+                        class="btn btn-primary">
                         Xóa bộ lọc
                     </button>
                 </div>

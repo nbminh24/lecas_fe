@@ -13,35 +13,22 @@
             <nav class="nav">
                 <ul class="main-nav">
                     <li class="nav-item">
-                        <a routerLink="/" routerLinkActive="active" class="nav-link">Trang chủ</a>
+                        <a href="/" (click)="reloadHome($event)" class="nav-link">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a routerLink="/products" routerLinkActive="active" class="nav-link">Sản phẩm</a>
+                        <a href="/products" (click)="reloadNav($event, '/products')" class="nav-link">Sản phẩm</a>
                     </li>
+                    <!-- <li class="nav-item">
+                        <a href="/sets" (click)="reloadNav($event, '/sets')" class="nav-link">Set đồ</a>
+                    </li> -->
                     <li class="nav-item">
-                        <a routerLink="/sets" routerLinkActive="active" class="nav-link">Set đồ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a routerLink="/promotions" routerLinkActive="active" class="nav-link">Khuyến mãi</a>
+                        <a href="/promotions" (click)="reloadNav($event, '/promotions')" class="nav-link">Khuyến mãi</a>
                     </li>
                 </ul>
             </nav>
 
             <!-- User Actions -->
             <div class="user-actions">
-                <ng-container *ngIf="!isLoggedIn">
-                    <a routerLink="/login" class="action-link">
-                        <i class="fas fa-user"></i>
-                        <span>Đăng nhập</span>
-                    </a>
-                </ng-container>
-                <ng-container *ngIf="isLoggedIn">
-                    <a routerLink="/account" class="action-link profile-link">
-                        <img *ngIf="user.avatar" [src]="user.avatar" alt="avatar" class="profile-avatar" />
-                        <i *ngIf="!user.avatar" class="fas fa-user"></i>
-                        <span>{{ user.name }}</span>
-                    </a>
-                </ng-container>
                 <a routerLink="/orders" class="action-link order-link">
                     <i class="fas fa-box"></i>
                     <span>Đơn hàng</span>
@@ -59,6 +46,22 @@
                     <i class="fas fa-comment-dots"></i>
                     <span>Chat</span>
                 </a>
+                <ng-container *ngIf="isLoggedIn">
+                    <a routerLink="/account" class="action-link profile-link">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <button class="action-link logout-link" (click)="logout()"
+                        style="background:none;border:none;cursor:pointer;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="!isLoggedIn">
+                    <a routerLink="/login" class="action-link">
+                        <i class="fas fa-user"></i>
+                        <span>Đăng nhập</span>
+                    </a>
+                </ng-container>
             </div>
         </div>
     </div>

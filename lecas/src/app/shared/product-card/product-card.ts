@@ -4,36 +4,67 @@ import { RouterLink, Router } from '@angular/router';
 import { Product } from '../../core/models/product.interface';
 import { CartService } from '../../core/services/cart';
 import { AddToCartRequest } from '../../core/models/cart.interface';
+import { FormsModule } from '@angular/forms';
+import { OrderService } from '../../core/services/order.service';
+import { CreateOrderRequest, Address } from '../../core/models/order.interface';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss'
 })
 export class ProductCard {
-  @Input() product!: Product;
+  @Input() product: any;
+  @Input() skeleton: boolean = false;
   quantity = 1;
   showQuickAdd = false;
   Math = Math;
+  selectedSize = '';
+  selectedColor = '';
+  addCartSuccess = false;
 
-  constructor(private cartService: CartService, private router: Router) { }
+  showAddressForm = false;
+  newShippingAddress: Address = {
+    type: 'home',
+    address: '',
+    city: '',
+    district: '',
+    ward: ''
+  };
+
+  constructor(private cartService: CartService, private router: Router, private orderService: OrderService) { }
 
   ngOnInit(): void {
     // Initialize with default values if needed
   }
 
+  get availableSizes(): string[] {
+    return this.product.sizes || [];
+  }
+
+  get availableColors(): string[] {
+    return (this.product.colors || []).map((c: any) => c.name);
+  }
+
   addToCart(): void {
+    if (!this.selectedSize && this.availableSizes.length > 0) return;
+    if (!this.selectedColor && this.availableColors.length > 0) return;
     const request: AddToCartRequest = {
       productId: this.product.id,
-      quantity: this.quantity
+      quantity: this.quantity,
+      size: this.selectedSize,
+      color: this.selectedColor
     };
-
     this.cartService.addToCart(request).subscribe({
       next: () => {
         this.showQuickAdd = false;
-        // You can add a success message here
+        this.selectedSize = '';
+        this.selectedColor = '';
+        this.quantity = 1;
+        this.addCartSuccess = true;
+        setTimeout(() => this.addCartSuccess = false, 1500);
       },
       error: (error) => {
         console.error('Error adding to cart:', error);
@@ -70,19 +101,34 @@ export class ProductCard {
     this.showQuickAdd = !this.showQuickAdd;
   }
 
-  buyNow(): void {
-    const request: AddToCartRequest = {
-      productId: this.product.id,
-      quantity: this.quantity
+  showAddressInput(): void {
+    this.showAddressForm = true;
+    this.newShippingAddress = {
+      type: 'home', address: '', city: '', district: '', ward: ''
     };
+  }
 
-    this.cartService.addToCart(request).subscribe({
-      next: () => {
-        this.router.navigate(['/checkout']);
-      },
-      error: (error) => {
-        console.error('Error adding to cart:', error);
-        // You can add an error message here
+  hideAddressInput(): void {
+    this.showAddressForm = false;
+  }
+
+  buyNow(): void {
+    if (!this.selectedSize && this.availableSizes.length > 0) return;
+    if (!this.selectedColor && this.availableColors.length > 0) return;
+    const productData = {
+      id: this.product.id,
+      name: this.product.name,
+      price: this.product.price,
+      images: this.product.images,
+      originalPrice: this.product.originalPrice || null
+    };
+    this.router.navigate(['/checkout'], {
+      state: {
+        buyNow: true,
+        product: productData,
+        quantity: this.quantity,
+        size: this.selectedSize,
+        color: this.selectedColor
       }
     });
   }

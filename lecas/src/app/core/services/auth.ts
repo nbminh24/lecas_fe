@@ -25,7 +25,10 @@ export class Auth {
   }
 
   private loadUserFromStorage(): void {
-    const userStr = localStorage.getItem('user');
+    let userStr = null;
+    if (typeof window !== 'undefined' && localStorage) {
+      userStr = localStorage.getItem('user');
+    }
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -41,21 +44,25 @@ export class Auth {
     return this.httpService.post<LoginResponse>('/auth/login', credentials).pipe(
       map(response => response.data!),
       tap(data => {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
         this.currentUserSubject.next(data.user as User);
       })
     );
   }
 
   googleLogin(request: GoogleLoginRequest): Observable<LoginResponse> {
-    return this.httpService.post<LoginResponse>('/auth/google-login', request).pipe(
+    return this.httpService.post<LoginResponse>('/Auth/google-login', request).pipe(
       map(response => response.data!),
       tap(data => {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
         this.currentUserSubject.next(data.user as User);
       })
     );
@@ -65,14 +72,19 @@ export class Auth {
     return this.httpService.post<LoginResponse>('/auth/refresh-token', request).pipe(
       map(response => response.data!),
       tap(data => {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+        }
       })
     );
   }
 
   logout(): Observable<any> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    let refreshToken = '';
+    if (typeof window !== 'undefined' && localStorage) {
+      refreshToken = localStorage.getItem('refreshToken') || '';
+    }
     if (refreshToken) {
       return this.httpService.post('/auth/logout', { refreshToken }).pipe(
         tap(() => {
@@ -86,9 +98,11 @@ export class Auth {
   }
 
   private clearAuthData(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined' && localStorage) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+    }
     this.currentUserSubject.next(null);
   }
 
@@ -99,8 +113,8 @@ export class Auth {
   }
 
   getProfile(): Observable<User> {
-    return this.httpService.get<User>('/users/profile').pipe(
-      map(response => response.data!)
+    return this.httpService.get<User>('/Users/profile').pipe(
+      map((response: any) => response.data ? response.data : response)
     );
   }
 
@@ -111,7 +125,9 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, ...updatedUser };
-          localStorage.setItem('user', JSON.stringify(newUser));
+          if (typeof window !== 'undefined' && localStorage) {
+            localStorage.setItem('user', JSON.stringify(newUser));
+          }
           this.currentUserSubject.next(newUser);
         }
       })
@@ -129,7 +145,9 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, addresses: updatedUser.addresses };
-          localStorage.setItem('user', JSON.stringify(newUser));
+          if (typeof window !== 'undefined' && localStorage) {
+            localStorage.setItem('user', JSON.stringify(newUser));
+          }
           this.currentUserSubject.next(newUser);
         }
       })
@@ -143,7 +161,9 @@ export class Auth {
         const currentUser = this.currentUserSubject.value;
         if (currentUser) {
           const newUser = { ...currentUser, addresses: updatedUser.addresses };
-          localStorage.setItem('user', JSON.stringify(newUser));
+          if (typeof window !== 'undefined' && localStorage) {
+            localStorage.setItem('user', JSON.stringify(newUser));
+          }
           this.currentUserSubject.next(newUser);
         }
       })
@@ -159,7 +179,10 @@ export class Auth {
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('accessToken');
+    if (typeof window !== 'undefined' && localStorage) {
+      return !!localStorage.getItem('accessToken');
+    }
+    return false;
   }
 
   getCurrentUserValue(): User | null {

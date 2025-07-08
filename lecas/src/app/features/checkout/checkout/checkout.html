@@ -1,19 +1,26 @@
-<div class="checkout-page">
+<div class="checkout-page-simple">
     <div class="container">
         <div class="page-header">
-            <h1 class="page-title">Thanh toán</h1>
-            <p class="page-subtitle">Hoàn tất đơn hàng của bạn với LeCas</p>
+            <h1 class="page-title">Thanh toán sản phẩm</h1>
         </div>
         <div class="checkout-layout">
             <div class="checkout-info">
-                <!-- Form thông tin nhận hàng và thanh toán -->
                 <form class="checkout-form" (ngSubmit)="submitOrder()" #checkoutForm="ngForm">
                     <div class="form-section">
                         <div class="section-header">
-                            <div class="section-icon--circle">👤</div>
                             <div class="section-title">Thông tin nhận hàng</div>
                         </div>
                         <div class="form-grid">
+                            <div class="form-group full-width" *ngIf="addresses.length > 0">
+                                <label>Chọn địa chỉ đã lưu</label>
+                                <select [(ngModel)]="selectedAddressId" name="addressId"
+                                    (ngModelChange)="onSelectAddress($event)">
+                                    <option value="">-- Chọn địa chỉ --</option>
+                                    <option *ngFor="let addr of addresses" [value]="addr.id">
+                                        {{ addr.name }} - {{ addr.phone }} - {{ addr.addressLine }}
+                                    </option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="name">Họ và tên</label>
                                 <input id="name" name="name" type="text" [(ngModel)]="customer.name" required
@@ -38,7 +45,6 @@
                     </div>
                     <div class="form-section">
                         <div class="section-header">
-                            <div class="section-icon--circle">💳</div>
                             <div class="section-title">Phương thức thanh toán</div>
                         </div>
                         <div class="payment-methods">
@@ -46,14 +52,7 @@
                                 [class.selected]="paymentMethod === method.value">
                                 <input type="radio" name="paymentMethod" [value]="method.value"
                                     [(ngModel)]="paymentMethod" required />
-                                <span class="method-icon">
-                                    <img [src]="method.icon" [alt]="method.label" width="32" height="32"
-                                        style="border-radius:8px;object-fit:cover;" />
-                                </span>
-                                <span class="method-info">
-                                    <span class="method-name">{{ method.label }}</span><br />
-                                    <span class="method-description">{{ method.description }}</span>
-                                </span>
+                                <span class="method-name">{{ method.label }}</span>
                             </label>
                         </div>
                     </div>
@@ -67,45 +66,32 @@
             </div>
             <div class="order-summary">
                 <div class="summary-header">
-                    <h3>Đơn hàng của bạn</h3>
+                    <h3>Sản phẩm thanh toán</h3>
                 </div>
-                <div class="order-items">
-                    <ng-container *ngIf="(cart$ | async) as cart">
-                        <div *ngFor="let item of cart.items" class="order-item">
-                            <div class="item-image">
-                                <img [src]="item.product.images?.[0] || '/assets/no-image.png'"
-                                    [alt]="item.product.name" />
-                            </div>
-                            <div class="item-details">
-                                <div class="item-name">{{ item.product.name }}</div>
-                                <div class="item-price">{{ item.price | number }}₫</div>
-                            </div>
-                            <div class="item-quantity">
-                                <button type="button" class="qty-btn" (click)="decreaseQuantity(item)">-</button>
-                                <input type="number" min="1" [(ngModel)]="item.quantity" (change)="updateQuantity(item)"
-                                    class="qty-input" />
-                                <button type="button" class="qty-btn" (click)="increaseQuantity(item)">+</button>
-                                <button type="button" class="remove-item-btn"
-                                    (click)="removeItem(item)">&times;</button>
-                            </div>
+                <div class="order-item" *ngIf="buyNowProduct">
+                    <div class="item-image">
+                        <img [src]="buyNowProduct.images?.[0] || '/assets/no-image.png'" [alt]="buyNowProduct.name" />
+                    </div>
+                    <div class="item-details">
+                        <div class="item-name">{{ buyNowProduct.name }}</div>
+                        <div class="item-price">{{ buyNowProduct.price | number }}₫</div>
+                        <div class="item-variant" *ngIf="buyNowSize || buyNowColor">
+                            <span *ngIf="buyNowSize">Size: {{ buyNowSize }}</span>
+                            <span *ngIf="buyNowColor">Màu: {{ buyNowColor }}</span>
                         </div>
-                    </ng-container>
+                        <div class="item-quantity">Số lượng: {{ buyNowQuantity }}</div>
+                    </div>
                 </div>
-                <div class="summary-totals" *ngIf="(cartSummary$ | async) as summary">
+                <div class="summary-totals">
                     <div class="summary-row">
                         <span class="row-label">Tạm tính</span>
-                        <span class="row-value">{{ summary.subtotal | number }}₫</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="row-label">Phí vận chuyển</span>
-                        <span class="row-value">{{ summary.shipping | number }}₫</span>
+                        <span class="row-value">{{ buyNowProduct.price * buyNowQuantity | number }}₫</span>
                     </div>
                     <div class="summary-row total">
                         <span class="row-label">Tổng cộng</span>
-                        <span class="row-value">{{ summary.total | number }}₫</span>
+                        <span class="row-value">{{ buyNowProduct.price * buyNowQuantity | number }}₫</span>
                     </div>
                 </div>
-                <app-shop-service-features></app-shop-service-features>
             </div>
         </div>
     </div>

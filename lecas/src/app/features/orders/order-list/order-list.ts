@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { OrderChatService } from '../../../core/services/order-chat.service';
 import { Router } from '@angular/router';
+import { OrderService } from '../../../core/services/order.service';
+import { Order as ApiOrder, OrderStatus } from '../../../core/models/order.interface';
 
 interface OrderProduct {
-  id: number;
+  id: string;
   name: string;
   image: string;
   price: number;
@@ -48,8 +50,8 @@ interface Order {
 export class OrderList {
   tabs = [
     { label: 'Tất cả', value: 'all' },
-    { label: 'Đang xử lý', value: 'processing' },
-    { label: 'Đang giao', value: 'shipping' },
+    { label: 'Đang xử lý', value: 'pending' },
+    { label: 'Đang giao', value: 'shipped' },
     { label: 'Đã giao', value: 'delivered' },
     { label: 'Đã hủy', value: 'cancelled' }
   ];
@@ -59,84 +61,87 @@ export class OrderList {
   showReviewModal = false;
   reviewOrderProducts: OrderProduct[] = [];
   reviewOrderId: string | null = null;
-  reviewData: { [productId: number]: { rating: number, comment: string, imageUrl?: string } } = {};
+  reviewData: { [productId: string]: { rating: number, comment: string, imageUrl?: string } } = {};
   currentPage = 1;
   pageSize = 20;
+  orders: Order[] = [];
+  loading = false;
+  error: string | null = null;
+  editShippingInfo: boolean = false;
+  shippingInfoForm: { name: string; phone: string; address: string; note?: string } = { name: '', phone: '', address: '', note: '' };
+  isAdmin: boolean = false; // TODO: set thực tế theo quyền user
 
-  orders: Order[] = [
-    {
-      id: 'OD123456789',
-      createdAt: '2024-07-01T14:30:00',
-      status: 'delivered',
-      total: 1151700,
-      payment: 'Thanh toán khi nhận hàng',
-      shippingInfo: {
-        name: 'Nguyễn Văn A',
-        phone: '0901234567',
-        address: '123 Đường ABC, Quận 1, TP.HCM',
-        note: 'Giao giờ hành chính'
+  constructor(
+    private orderChatService: OrderChatService,
+    private router: Router,
+    private orderService: OrderService
+  ) {
+    this.fetchOrders();
+  }
+
+  fetchOrders() {
+    this.loading = true;
+    this.error = null;
+    this.orderService.getOrders().subscribe({
+      next: (apiOrders: ApiOrder[]) => {
+        this.orders = apiOrders.map(o => this.mapOrderFromApi(o));
+        this.loading = false;
       },
-      products: [
-        { id: 1, name: 'Áo Polo Nam Casual', image: '/assets/products/polo-black.jpg', price: 299000, quantity: 1, color: 'Đen', size: 'L' },
-        { id: 2, name: 'Áo Sơ Mi Nam Cổ Bẻ', image: '/assets/products/tee-white.jpg', price: 399000, quantity: 1, color: 'Trắng', size: 'S' },
-        { id: 3, name: 'Quần Khaki Nam', image: '/assets/products/jeans-blue.jpg', price: 349000, quantity: 1, color: 'Khaki', size: '28' }
-      ],
-      tracking: [
-        { status: 'Đã đặt hàng', location: 'Online', time: '01/07/2024 14:30' },
-        { status: 'Đã xác nhận', location: 'LeCas Shop', time: '01/07/2024 15:00' },
-        { status: 'Đã xuất kho', location: 'Kho LeCas', time: '01/07/2024 18:00' },
-        { status: 'Đã đến bưu cục A', location: 'Bưu cục Quận 1', time: '02/07/2024 08:30' },
-        { status: 'Đang giao', location: 'TP.HCM', time: '02/07/2024 10:00' },
-        { status: 'Đã giao thành công', location: '123 Đường ABC', time: '02/07/2024 12:00' }
-      ],
-      canReview: true
-    },
-    {
-      id: 'OD987654321',
-      createdAt: '2024-07-02T09:00:00',
-      status: 'shipping',
-      total: 499000,
-      payment: 'Ví MoMo',
+      error: (err) => {
+        this.error = 'Không thể tải danh sách đơn hàng.';
+        this.loading = false;
+      }
+    });
+  }
+
+  mapOrderFromApi(apiOrder: ApiOrder): Order {
+    return {
+      id: apiOrder.id,
+      createdAt: apiOrder.createdAt instanceof Date ? apiOrder.createdAt.toISOString() : apiOrder.createdAt,
+      status: this.mapStatus(apiOrder.status),
+      total: apiOrder.total,
+      payment: this.mapPayment(apiOrder.paymentMethod),
       shippingInfo: {
-        name: 'Nguyễn Văn B',
-        phone: '0909876543',
-        address: '456 Đường XYZ, Quận 3, TP.HCM'
+        name: apiOrder.shippingAddress?.address || '',
+        phone: '', // Nếu API có phone thì map vào đây
+        address: apiOrder.shippingAddress?.address || '',
+        note: apiOrder.note || ''
       },
-      products: [
-        { id: 4, name: 'Áo Thun Basic', image: '/assets/products/tee-white.jpg', price: 249000, quantity: 2, color: 'Trắng', size: 'M' }
-      ],
-      tracking: [
-        { status: 'Đã đặt hàng', location: 'Online', time: '02/07/2024 09:00' },
-        { status: 'Đã xác nhận', location: 'LeCas Shop', time: '02/07/2024 09:30' },
-        { status: 'Đã xuất kho', location: 'Kho LeCas', time: '02/07/2024 12:00' },
-        { status: 'Đã đến bưu cục B', location: 'Bưu cục Quận 3', time: '02/07/2024 15:00' },
-        { status: 'Đang giao', location: 'TP.HCM', time: '02/07/2024 16:00' }
-      ]
-    },
-    {
-      id: 'OD555555555',
-      createdAt: '2024-06-28T10:00:00',
-      status: 'cancelled',
-      total: 299000,
-      payment: 'ZaloPay',
-      shippingInfo: {
-        name: 'Nguyễn Văn C',
-        phone: '0905555555',
-        address: '789 Đường DEF, Quận 5, TP.HCM',
-        note: 'Giao buổi sáng'
-      },
-      products: [
-        { id: 5, name: 'Áo Polo Nam', image: '/assets/products/polo-black.jpg', price: 299000, quantity: 1, color: 'Đen', size: 'M' }
-      ],
-      tracking: [
-        { status: 'Đã đặt hàng', location: 'Online', time: '28/06/2024 10:00' },
-        { status: 'Đã xác nhận', location: 'LeCas Shop', time: '28/06/2024 10:30' },
-        { status: 'Đã hủy', location: 'LeCas Shop', time: '28/06/2024 11:00' }
-      ]
+      products: (apiOrder.items || []).map(item => ({
+        id: item.productId,
+        name: item.product?.name || '',
+        image: item.product?.images?.[0] || '',
+        price: item.price,
+        quantity: item.quantity,
+        color: '', // Nếu API có color thì map vào đây
+        size: ''   // Nếu API có size thì map vào đây
+      })),
+      tracking: [], // Sẽ lấy tracking khi vào chi tiết đơn hàng
+      canReview: apiOrder.status === OrderStatus.DELIVERED
+    };
+  }
+
+  mapStatus(status: string): string {
+    switch ((status || '').toLowerCase()) {
+      case 'pending': return 'Đang chờ xác nhận';
+      case 'confirmed': return 'Đã xác nhận';
+      case 'processing': return 'Đang xử lý';
+      case 'shipped': return 'Đang giao';
+      case 'delivered': return 'Đã giao';
+      case 'cancelled': return 'Đã hủy';
+      case 'returned': return 'Đã trả hàng';
+      default: return status;
     }
-  ];
+  }
 
-  constructor(private orderChatService: OrderChatService, private router: Router) { }
+  mapPayment(method: string): string {
+    switch (method) {
+      case 'cod': return 'Thanh toán khi nhận hàng';
+      case 'momo': return 'Ví MoMo';
+      case 'zalopay': return 'ZaloPay';
+      default: return method;
+    }
+  }
 
   get filteredOrders() {
     let filtered = this.orders;
@@ -163,7 +168,31 @@ export class OrderList {
   }
 
   openDetail(order: Order) {
-    this.showDetail = order;
+    this.loading = true;
+    this.orderService.getOrder(order.id).subscribe({
+      next: (apiOrder: ApiOrder) => {
+        const mappedOrder = this.mapOrderFromApi(apiOrder);
+        // Lấy tracking
+        this.orderService.getOrderTracking(order.id).subscribe({
+          next: (trackings) => {
+            mappedOrder.tracking = (trackings || []).map(t => ({
+              status: this.mapStatus(t.status),
+              location: t.location || '',
+              time: t.createdAt ? new Date(t.createdAt).toLocaleString('vi-VN') : ''
+            }));
+            this.showDetail = mappedOrder;
+            this.loading = false;
+          },
+          error: () => {
+            this.showDetail = mappedOrder;
+            this.loading = false;
+          }
+        });
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
   closeDetail() {
@@ -193,23 +222,33 @@ export class OrderList {
   }
 
   submitReview() {
-    alert('Đã gửi đánh giá!\n' + JSON.stringify(this.reviewData, null, 2));
-    this.closeReviewModal();
-    const order = this.orders.find(o => o.id === this.reviewOrderId);
-    if (order) order.canReview = false;
+    if (!this.reviewOrderId || !this.reviewOrderProducts.length) return;
+    this.loading = true;
+    const requests = this.reviewOrderProducts.map(p =>
+      this.orderService.createReview(this.reviewOrderId!, {
+        rating: this.reviewData[p.id]?.rating || 5,
+        comment: this.reviewData[p.id]?.comment || ''
+      })
+    );
+    Promise.all(requests.map(r => r.toPromise())).then(() => {
+      this.closeReviewModal();
+      this.openDetail(this.orders.find(o => o.id === this.reviewOrderId)!);
+      this.loading = false;
+    }).catch(() => {
+      alert('Gửi đánh giá thất bại!');
+      this.loading = false;
+    });
   }
 
   getStatusLabel(status: string | undefined | null): string {
-    if (!status) return 'Khác';
-    const found = this.tabs.find(t => t.value === status);
-    return found ? found.label : 'Khác';
+    return this.mapStatus(status || '');
   }
 
   getProductNames(order: Order): string {
     return order.products.map(p => p.name).join(', ');
   }
 
-  onAttachImage(event: Event, productId: number) {
+  onAttachImage(event: Event, productId: string) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
@@ -234,5 +273,73 @@ export class OrderList {
   muaLai(order: Order) {
     // Giả lập thêm lại toàn bộ sản phẩm vào giỏ hàng
     alert('Đã thêm lại các sản phẩm của đơn #' + order.id + ' vào giỏ hàng!');
+  }
+
+  cancelOrder(order: Order) {
+    if (!order) return;
+    if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng #' + order.id + ' không?')) return;
+    this.loading = true;
+    this.orderService.cancelOrder(order.id, { reason: 'Người dùng hủy đơn' }).subscribe({
+      next: () => {
+        this.fetchOrders();
+        if (this.showDetail && this.showDetail.id === order.id) {
+          this.openDetail(order);
+        }
+        this.loading = false;
+      },
+      error: () => {
+        alert('Hủy đơn hàng thất bại!');
+        this.loading = false;
+      }
+    });
+  }
+
+  startEditShippingInfo() {
+    if (!this.showDetail) return;
+    this.editShippingInfo = true;
+    this.shippingInfoForm = {
+      name: this.showDetail.shippingInfo.name,
+      phone: this.showDetail.shippingInfo.phone,
+      address: this.showDetail.shippingInfo.address,
+      note: this.showDetail.shippingInfo.note || ''
+    };
+  }
+
+  cancelEditShippingInfo() {
+    this.editShippingInfo = false;
+  }
+
+  saveShippingInfo() {
+    if (!this.showDetail) return;
+    this.loading = true;
+    this.orderService.updateOrderInfo(this.showDetail.id, {
+      shippingInfo: this.shippingInfoForm
+    }).subscribe({
+      next: () => {
+        this.editShippingInfo = false;
+        this.openDetail(this.showDetail!);
+        this.loading = false;
+      },
+      error: () => {
+        alert('Cập nhật thông tin giao hàng thất bại!');
+        this.loading = false;
+      }
+    });
+  }
+
+  updateOrderStatus(order: Order, newStatus: string) {
+    if (!order) return;
+    if (!confirm('Bạn có chắc chắn muốn chuyển trạng thái đơn #' + order.id + ' sang ' + newStatus + ' không?')) return;
+    this.loading = true;
+    this.orderService.updateOrderStatus(order.id, { status: newStatus }).subscribe({
+      next: () => {
+        this.openDetail(order);
+        this.loading = false;
+      },
+      error: () => {
+        alert('Cập nhật trạng thái thất bại!');
+        this.loading = false;
+      }
+    });
   }
 }

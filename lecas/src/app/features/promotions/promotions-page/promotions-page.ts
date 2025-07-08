@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { PromotionPopupComponent } from '../../../shared/promotion-popup/promotion-popup.component';
+import { ProductService } from '../../../core/services/product';
+import { Product } from '../../../core/models/product.interface';
 
 interface PromotionBanner {
     image: string;
@@ -70,38 +72,9 @@ export class PromotionsPageComponent implements OnInit {
             remaining: 0
         }
     ];
-    hotProducts: HotProduct[] = [
-        {
-            image: '/assets/products/polo-black.jpg',
-            name: 'Áo Polo Nam Casual',
-            desc: 'Chất liệu cotton thoáng mát, giảm sốc mùa hè!',
-            price: 299000,
-            salePrice: 219000,
-            discountPercent: 27,
-            remaining: 12,
-            total: 50
-        },
-        {
-            image: '/assets/products/tee-white.jpg',
-            name: 'Áo Thun Basic',
-            desc: 'Best seller, giá cực tốt chỉ hôm nay!',
-            price: 249000,
-            salePrice: 179000,
-            discountPercent: 28,
-            remaining: 5,
-            total: 30
-        },
-        {
-            image: '/assets/products/jeans-blue.jpg',
-            name: 'Quần Jeans Slimfit',
-            desc: 'Form ôm, tôn dáng, giảm sâu cuối tuần!',
-            price: 399000,
-            salePrice: 299000,
-            discountPercent: 25,
-            remaining: 8,
-            total: 40
-        }
-    ];
+    hotProducts: Product[] = [];
+    isLoadingHotProducts = true;
+    errorHotProducts: string | null = null;
 
     // Pagination for coupons
     currentCouponPage = 1;
@@ -131,11 +104,29 @@ export class PromotionsPageComponent implements OnInit {
         return this.coupons.filter(c => !c.isClaimed && (c.remaining ?? 1) > 0);
     }
 
+    constructor(private productService: ProductService) { }
+
     ngOnInit() {
         // Hiện popup nếu còn mã chưa nhận
         if (this.coupons.some(c => !c.isClaimed && (c.remaining ?? 1) > 0)) {
             this.showPopup = true;
         }
+        this.loadHotProducts();
+    }
+
+    loadHotProducts() {
+        this.isLoadingHotProducts = true;
+        this.errorHotProducts = null;
+        this.productService.getFlashSaleProducts().subscribe({
+            next: (products: Product[]) => {
+                this.hotProducts = products;
+                this.isLoadingHotProducts = false;
+            },
+            error: (err) => {
+                this.errorHotProducts = 'Có lỗi khi tải sản phẩm khuyến mãi';
+                this.isLoadingHotProducts = false;
+            }
+        });
     }
 
     onPopupClosed() {
@@ -170,5 +161,10 @@ export class PromotionsPageComponent implements OnInit {
             this.toastMsg = 'Bạn đã nhận hết các mã hoặc không còn lượt!';
             setTimeout(() => this.toastMsg = '', 2000);
         }
+    }
+
+    getDiscountPercent(p: Product): number {
+        if (!p.originalPrice || p.originalPrice === 0) return 0;
+        return Math.round((1 - p.price / p.originalPrice) * 100);
     }
 } 

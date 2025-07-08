@@ -90,6 +90,24 @@
                         </div>
                     </div>
 
+                    <!-- Product Options: Size/Color -->
+                    <div class="product-options" *ngIf="availableSizes.length > 0 || availableColors.length > 0">
+                        <div *ngIf="availableSizes.length > 0">
+                            <label>Chọn size:</label>
+                            <select [(ngModel)]="selectedSize">
+                                <option value="" disabled selected>Chọn size</option>
+                                <option *ngFor="let s of availableSizes" [value]="s">{{ s }}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="availableColors.length > 0">
+                            <label>Chọn màu:</label>
+                            <select [(ngModel)]="selectedColor">
+                                <option value="" disabled selected>Chọn màu</option>
+                                <option *ngFor="let c of availableColors" [value]="c">{{ c }}</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="product-actions">
                         <button (click)="addToCart()" class="btn btn-primary add-to-cart-btn">
@@ -97,7 +115,8 @@
                             Thêm vào giỏ hàng
                         </button>
 
-                        <button (click)="buyNow()" class="btn btn-accent buy-now-btn">
+                        <button (click)="buyNow()" class="btn btn-accent buy-now-btn"
+                            [disabled]="(availableSizes.length > 0 && !selectedSize) || (availableColors.length > 0 && !selectedColor)">
                             <i class="fas fa-bolt"></i>
                             Mua ngay
                         </button>

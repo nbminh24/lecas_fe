@@ -47,9 +47,22 @@ export enum OrderStatus {
 }
 
 export interface CreateOrderRequest {
-    shippingAddress: Address;
+    shippingInfo: {
+        name: string;
+        phone: string;
+        address: string;
+        city: string;
+        district: string;
+        note?: string;
+    };
     paymentMethod: 'cod' | 'momo' | 'zalopay';
     note?: string;
+    items?: Array<{
+        productId: string;
+        quantity: number;
+        size?: string;
+        color?: string;
+    }>;
 }
 
 export interface CancelOrderRequest {

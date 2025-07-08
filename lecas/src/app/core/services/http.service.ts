@@ -25,7 +25,10 @@ export class HttpService {
     ) { }
 
     private getHeaders(): HttpHeaders {
-        const token = localStorage.getItem('accessToken');
+        let token = '';
+        if (typeof localStorage !== 'undefined') {
+            token = localStorage.getItem('accessToken') || '';
+        }
         return new HttpHeaders({
             'Content-Type': 'application/json',
             ...(token && { Authorization: `Bearer ${token}` })
@@ -66,17 +69,22 @@ export class HttpService {
     }
 
     private handleError(error: HttpErrorResponse): Observable<never> {
+        console.error('API error:', error);
+
         if (error.status === 401 && !this.isRefreshing) {
             return this.handleTokenRefresh(error);
         }
 
-        const errorMessage = error.error?.message || 'An error occurred';
+        const errorMessage = error.error?.message || error.message || 'An error occurred';
         return throwError(() => new Error(errorMessage));
     }
 
     private handleTokenRefresh(error: HttpErrorResponse): Observable<never> {
         this.isRefreshing = true;
-        const refreshToken = localStorage.getItem('refreshToken');
+        let refreshToken = '';
+        if (typeof localStorage !== 'undefined') {
+            refreshToken = localStorage.getItem('refreshToken') || '';
+        }
 
         if (!refreshToken) {
             this.logout();
@@ -89,8 +97,10 @@ export class HttpService {
         ).pipe(
             tap(response => {
                 if (response.success && response.data) {
-                    localStorage.setItem('accessToken', response.data.accessToken);
-                    localStorage.setItem('refreshToken', response.data.refreshToken);
+                    if (typeof localStorage !== 'undefined') {
+                        localStorage.setItem('accessToken', response.data.accessToken);
+                        localStorage.setItem('refreshToken', response.data.refreshToken);
+                    }
                     this.isRefreshing = false;
                     this.refreshTokenSubject.next(response.data.accessToken);
                 }
@@ -106,9 +116,11 @@ export class HttpService {
     }
 
     private logout(): void {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+        }
         this.router.navigate(['/login']);
     }
 

@@ -9,7 +9,7 @@
     <i class="fas fa-exclamation-triangle"></i>
     <h3>Lỗi</h3>
     <p>{{ error }}</p>
-    <button (click)="loadProducts()" class="btn btn-primary">
+    <button (click)="retryLoadProducts()" class="btn btn-primary">
         Thử lại
     </button>
 </div>
@@ -34,13 +34,12 @@
         <div class="container">
             <h2 class="section-title">Danh Mục Sản Phẩm</h2>
             <div class="categories-grid">
-                <div class="category-card" *ngFor="let category of featuredCategories">
-                    <a [routerLink]="category.link" class="category-link">
-                        <div class="category-image">
-                            <img [src]="category.image" [alt]="category.name" class="category-img">
-                        </div>
-                        <h3 class="category-name">{{ category.name }}</h3>
-                    </a>
+                <div class="category-card" *ngFor="let category of featuredCategories" (click)="goToCategory(category)"
+                    style="cursor:pointer;">
+                    <div class="category-link">
+                        <!-- Xóa phần ảnh -->
+                        <h3 class="category-name big-name">{{ category.name }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,7 +84,12 @@
                 </a>
             </div>
             <div class="products-grid">
-                <app-product-card *ngFor="let product of featuredProducts" [product]="product"></app-product-card>
+                <ng-container *ngIf="!noFeaturedProducts; else noFeatured">
+                    <app-product-card *ngFor="let product of featuredProducts" [product]="product"></app-product-card>
+                </ng-container>
+                <ng-template #noFeatured>
+                    <div class="no-products-message">Không có danh sách</div>
+                </ng-template>
             </div>
         </div>
     </section>
@@ -100,7 +104,12 @@
                 </a>
             </div>
             <div class="products-grid">
-                <app-product-card *ngFor="let product of newArrivals" [product]="product"></app-product-card>
+                <ng-container *ngIf="!noNewArrivals; else noNew">
+                    <app-product-card *ngFor="let product of newArrivals" [product]="product"></app-product-card>
+                </ng-container>
+                <ng-template #noNew>
+                    <div class="no-products-message">Không có danh sách</div>
+                </ng-template>
             </div>
         </div>
     </section>
@@ -115,12 +124,17 @@
                 </a>
             </div>
             <div class="products-grid">
-                <app-product-card *ngFor="let product of bestSellers" [product]="product"></app-product-card>
+                <ng-container *ngIf="!noBestSellers; else noBest">
+                    <app-product-card *ngFor="let product of bestSellers" [product]="product"></app-product-card>
+                </ng-container>
+                <ng-template #noBest>
+                    <div class="no-products-message">Không có danh sách</div>
+                </ng-template>
             </div>
         </div>
     </section>
 
-    <!-- Newsletter -->
+    <!-- Newsletter (Đăng Ký Nhận Tin) chỉ giữ 1 section ở cuối cùng -->
     <section class="newsletter">
         <div class="container">
             <div class="newsletter-content">

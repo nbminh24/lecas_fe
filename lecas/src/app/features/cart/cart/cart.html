@@ -8,7 +8,31 @@
 
         <!-- Loading State -->
         <div class="loading-state" *ngIf="isLoading">
-            <div class="loading-spinner"></div>
+            <div class="cart-items">
+                <div class="cart-item skeleton" *ngFor="let s of [1,2,3]">
+                    <div class="item-image skeleton-image"></div>
+                    <div class="item-details">
+                        <div class="line-skeleton short"></div>
+                        <div class="line-skeleton"></div>
+                    </div>
+                    <div class="quantity-controls">
+                        <div class="line-skeleton" style="width:40px;height:16px;"></div>
+                    </div>
+                    <div class="item-total">
+                        <div class="line-skeleton" style="width:60px;height:16px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-summary skeleton">
+                <div class="summary-header">
+                    <div class="line-skeleton short" style="width:120px;"></div>
+                </div>
+                <div class="summary-items">
+                    <div class="line-skeleton" style="width:80%;height:16px;"></div>
+                    <div class="line-skeleton" style="width:60%;height:16px;"></div>
+                    <div class="line-skeleton" style="width:90%;height:16px;"></div>
+                </div>
+            </div>
             <p>Đang tải giỏ hàng...</p>
         </div>
 
@@ -102,10 +126,10 @@
                 </div>
 
                 <!-- Checkout Button -->
-                <a [routerLink]="['/checkout']" class="checkout-btn">
+                <button (click)="goToCheckout()" class="checkout-btn">
                     <i class="fas fa-credit-card"></i>
                     Tiến hành thanh toán
-                </a>
+                </button>
 
                 <!-- Cart Features -->
                 <app-shop-service-features></app-shop-service-features>

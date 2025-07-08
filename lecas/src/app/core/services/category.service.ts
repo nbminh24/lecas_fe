@@ -11,37 +11,37 @@ export class CategoryService {
     constructor(private httpService: HttpService) { }
 
     getCategories(): Observable<Category[]> {
-        return this.httpService.get<Category[]>('/categories').pipe(
+        return this.httpService.get<Category[]>('/Categories').pipe(
             map(response => response.data || [])
         );
     }
 
     getCategory(id: string): Observable<Category> {
-        return this.httpService.get<Category>(`/categories/${id}`).pipe(
+        return this.httpService.get<Category>(`/Categories/${id}`).pipe(
             map(response => response.data!)
         );
     }
 
     getCategoryProducts(categoryId: string): Observable<Product[]> {
-        return this.httpService.get<Product[]>(`/categories/${categoryId}/products`).pipe(
+        return this.httpService.get<Product[]>(`/Categories/${categoryId}/products`).pipe(
             map(response => response.data || [])
         );
     }
 
     // Admin methods
     createCategory(categoryData: any): Observable<Category> {
-        return this.httpService.post<Category>('/categories', categoryData).pipe(
+        return this.httpService.post<Category>('/Categories', categoryData).pipe(
             map(response => response.data!)
         );
     }
 
     updateCategory(id: string, categoryData: any): Observable<Category> {
-        return this.httpService.put<Category>(`/categories/${id}`, categoryData).pipe(
+        return this.httpService.put<Category>(`/Categories/${id}`, categoryData).pipe(
             map(response => response.data!)
         );
     }
 
     deleteCategory(id: string): Observable<any> {
-        return this.httpService.delete(`/categories/${id}`);
+        return this.httpService.delete(`/Categories/${id}`);
     }
 } 

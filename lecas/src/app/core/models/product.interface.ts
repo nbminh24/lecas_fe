@@ -13,6 +13,8 @@ export interface Product {
     reviewCount: number;
     createdAt: Date;
     updatedAt: Date;
+    sizes?: string[];
+    colors?: ProductColor[];
 }
 
 export interface Category {

@@ -5,3 +5,5 @@
 </main>
 
 <app-footer *ngIf="!hideLayout"></app-footer>
+
+<app-toast-notification *ngIf="toast" [message]="toast.message" [type]="toast.type"></app-toast-notification>

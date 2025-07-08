@@ -9,17 +9,20 @@
             <h2 class="flash-sale-title">Flash Sale</h2>
             <div class="flash-sale-list">
                 <div class="flash-sale-card" *ngFor="let p of pagedHotProducts">
-                    <img [src]="p.image" [alt]="p.name" class="flash-sale-thumb" />
+                    <img [src]="p.images[0]" [alt]="p.name" class="flash-sale-thumb" />
                     <div class="flash-sale-info">
                         <div class="flash-sale-info-row">
                             <div class="flash-sale-name">{{ p.name }}</div>
-                            <span class="flash-sale-discount">-{{ p.discountPercent }}%</span>
+                            <span class="flash-sale-discount">
+                                -{{ getDiscountPercent(p) }}%
+                            </span>
                         </div>
                         <div class="flash-sale-prices">
-                            <span class="flash-sale-sale-price">{{ p.salePrice | number }}₫</span>
-                            <span class="flash-sale-price">{{ p.price | number }}₫</span>
+                            <span class="flash-sale-sale-price">{{ p.price | number }}₫</span>
+                            <span *ngIf="p.originalPrice" class="flash-sale-price">{{ p.originalPrice | number
+                                }}₫</span>
                         </div>
-                        <div class="flash-sale-desc">{{ p.desc }}</div>
+                        <div class="flash-sale-desc">{{ p.description }}</div>
                     </div>
                     <div class="flash-sale-action-btns-inline">
                         <button class="flash-sale-add-cart-btn small">Thêm vào giỏ</button>
@@ -27,9 +30,11 @@
                     </div>
                     <div class="flash-sale-remaining-bar">
                         <div class="flash-sale-bar-bg">
-                            <div class="flash-sale-bar-fill" [style.width]="(p.remaining/p.total*100)+'%'"></div>
+                            <div class="flash-sale-bar-fill" style="width:100%"></div>
                         </div>
-                        <span class="flash-sale-remaining-text">Còn lại: {{ p.remaining }}/{{ p.total }}</span>
+                        <span class="flash-sale-remaining-text">
+                            {{ p.inStock ? 'Còn hàng' : 'Hết hàng' }}
+                        </span>
                     </div>
                 </div>
             </div>

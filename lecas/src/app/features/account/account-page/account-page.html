@@ -1,48 +1,75 @@
-<div class="account-page">
-    <aside class="account-sidebar">
-        <div class="account-avatar">
-            <img [src]="user.avatar" alt="avatar" />
-            <div class="account-name">{{ user.name }}</div>
-            <div class="account-email">{{ user.email }}</div>
-        </div>
-        <nav class="account-menu">
-            <button *ngFor="let m of menu" (click)="selectMenu(m.key)" [class.active]="selected === m.key">
-                <i [class]="m.icon"></i> {{ m.label }}
-            </button>
-        </nav>
-    </aside>
-    <main class="account-content">
+<div class="account-page-horizontal">
+    <nav class="account-tabs-horizontal">
+        <button *ngFor="let m of menu" (click)="selectMenu(m.key)" [class.active]="selected === m.key">
+            <i [class]="m.icon"></i> {{ m.label }}
+        </button>
+    </nav>
+    <main class="account-content-horizontal">
         <div *ngIf="selected === 'profile'">
             <h2>Thông tin cá nhân</h2>
-            <div class="profile-info">
-                <img [src]="user.avatar" alt="avatar" class="profile-avatar" />
-                <div class="profile-fields">
-                    <div><b>Họ tên:</b> {{ user.name }}</div>
-                    <div><b>Email:</b> {{ user.email }}</div>
-                    <div><b>SĐT:</b> {{ user.phone }}</div>
-                </div>
-            </div>
+            <form (ngSubmit)="onSaveProfile()" #profileForm="ngForm" class="profile-form-horizontal">
+                <label>Họ</label>
+                <input type="text" [(ngModel)]="user.firstName" name="firstName" required />
+                <label>Tên</label>
+                <input type="text" [(ngModel)]="user.lastName" name="lastName" required />
+                <label>Số điện thoại</label>
+                <input type="text" [(ngModel)]="user.phoneNumber" name="phoneNumber" />
+                <label>Ngày sinh</label>
+                <input type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
+                <label>Giới tính</label>
+                <select [(ngModel)]="user.gender" name="gender">
+                    <option value="">Chọn</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                    <option value="other">Khác</option>
+                </select>
+                <button type="submit">Lưu thay đổi</button>
+            </form>
         </div>
         <div *ngIf="selected === 'password'">
             <h2>Đổi mật khẩu</h2>
-            <form class="password-form">
-                <input type="password" placeholder="Mật khẩu cũ" />
-                <input type="password" placeholder="Mật khẩu mới" />
-                <input type="password" placeholder="Xác nhận mật khẩu mới" />
+            <form (ngSubmit)="onChangePassword()" #passwordForm="ngForm" class="password-form-horizontal">
+                <label>Mật khẩu hiện tại</label>
+                <input type="password" [(ngModel)]="password.currentPassword" name="currentPassword" required />
+                <label>Mật khẩu mới</label>
+                <input type="password" [(ngModel)]="password.newPassword" name="newPassword" required />
                 <button type="submit">Đổi mật khẩu</button>
             </form>
         </div>
-        <div *ngIf="selected === 'orders'">
-            <h2>Đơn hàng của tôi</h2>
-            <p>(Tích hợp order-list sau)</p>
-        </div>
         <div *ngIf="selected === 'address'">
             <h2>Địa chỉ giao hàng</h2>
-            <p>(Tích hợp quản lý địa chỉ sau)</p>
-        </div>
-        <div *ngIf="selected === 'voucher'">
-            <h2>Voucher đã lưu</h2>
-            <p>(Tích hợp danh sách voucher sau)</p>
+            <form (ngSubmit)="onAddAddress()" #addressForm="ngForm" class="address-form-horizontal">
+                <label>Tên người nhận</label>
+                <input type="text" [(ngModel)]="newAddress.name" name="name" required />
+                <label>Số điện thoại</label>
+                <input type="text" [(ngModel)]="newAddress.phone" name="phone" required />
+                <label>Địa chỉ</label>
+                <input type="text" [(ngModel)]="newAddress.address" name="address" required />
+                <label>Thành phố</label>
+                <input type="text" [(ngModel)]="newAddress.city" name="city" required />
+                <label>Quận/Huyện</label>
+                <input type="text" [(ngModel)]="newAddress.district" name="district" required />
+                <label>Phường/Xã</label>
+                <input type="text" [(ngModel)]="newAddress.ward" name="ward" required />
+                <label>Loại địa chỉ</label>
+                <select [(ngModel)]="newAddress.type" name="type" required>
+                    <option value="home">Nhà riêng</option>
+                    <option value="work">Công ty</option>
+                    <option value="other">Khác</option>
+                </select>
+                <label>Ghi chú</label>
+                <input type="text" [(ngModel)]="newAddress.note" name="note" />
+                <label><input type="checkbox" [(ngModel)]="newAddress.isDefault" name="isDefault" /> Địa chỉ mặc
+                    định</label>
+                <button type="submit">Thêm địa chỉ</button>
+            </form>
+            <ul class="address-list-horizontal">
+                <li *ngFor="let addr of addresses">
+                    <div>{{ addr.name }} - {{ addr.phone }}<br>{{ addr.address }}, {{ addr.district }}, {{ addr.city }}
+                    </div>
+                    <button (click)="onDeleteAddress(addr.id)">Xóa</button>
+                </li>
+            </ul>
         </div>
     </main>
 </div>

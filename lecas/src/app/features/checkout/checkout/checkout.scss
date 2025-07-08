@@ -568,3 +568,44 @@
         margin: var(--spacing-xl) 0 0 0;
     }
 }
+
+.summary-skeleton {
+    background: #f6f7f8;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 16px;
+    margin-bottom: 16px;
+    animation: skeleton-fade 1.2s infinite linear alternate;
+}
+
+.line-skeleton {
+    height: 16px;
+    background: linear-gradient(90deg, #f6f7f8 25%, #edeef1 50%, #f6f7f8 75%);
+    border-radius: 4px;
+    animation: skeleton-shimmer 1.2s infinite linear;
+    margin-bottom: 8px;
+}
+
+.line-skeleton.short {
+    width: 60%;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+@keyframes skeleton-fade {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

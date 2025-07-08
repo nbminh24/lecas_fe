@@ -22,6 +22,8 @@ export class ProductDetail implements OnInit {
   isLoading = true;
   error = '';
   Math = Math;
+  selectedSize = '';
+  selectedColor = '';
 
   constructor(
     private productService: ProductService,
@@ -89,18 +91,22 @@ export class ProductDetail implements OnInit {
   }
 
   buyNow(): void {
-    if (!this.product) {
-      return;
-    }
-
+    if (!this.product) return;
+    if (this.availableSizes.length > 0 && !this.selectedSize) return;
+    if (this.availableColors.length > 0 && !this.selectedColor) return;
     const request: AddToCartRequest = {
       productId: this.product.id,
-      quantity: this.quantity
+      quantity: this.quantity,
+      size: this.selectedSize,
+      color: this.selectedColor
     };
-
     this.cartService.addToCart(request).subscribe({
       next: () => {
-        this.router.navigate(['/checkout']);
+        // Đảm bảo reload lại giỏ hàng trước khi chuyển trang
+        this.cartService["loadCart"]();
+        setTimeout(() => {
+          this.router.navigate(['/checkout']);
+        }, 200); // delay nhỏ để đảm bảo cart cập nhật
       },
       error: (error) => {
         console.error('Error adding to cart:', error);
@@ -132,5 +138,13 @@ export class ProductDetail implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/products']);
+  }
+
+  get availableSizes(): string[] {
+    return this.product?.sizes || [];
+  }
+
+  get availableColors(): string[] {
+    return (this.product?.colors || []).map(c => c.name);
   }
 }
